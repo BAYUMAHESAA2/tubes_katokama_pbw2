@@ -21,7 +21,7 @@
                             <p class="card-text">No. WA: {{ $w->no_wa }}</p>
                             <p class="card-text">Status Pengantaran: {{ $w->status_pengantaran }}</p>
                             <a href="{{ route('warung.menu', $w->warung_id) }}" class="btn btn-warning">Menu</a>
-                            {{-- <a href="{{ route('warung.menu.add', $w->warung_id) }}" class="btn btn-primary">Tambah Menu</a> --}}
+                        
 
                         </div>
                     </div>
