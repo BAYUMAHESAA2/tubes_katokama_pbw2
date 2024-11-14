@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class WhatsAppController extends Controller
+class WhatsappController extends Controller
 {
     public function send(Request $request)
     {
