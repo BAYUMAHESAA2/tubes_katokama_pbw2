@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WarungController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\WhatsappController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -27,5 +28,8 @@ Route::post('/warung/{id}/menu', [WarungController::class, 'storeMenu'])->name('
 
 Route::get('/menu/create/{warung_id}', [MenuController::class, 'create'])->name('menu.create');
 Route::post('/menu/store', [MenuController::class, 'store'])->name('menu.store');
+
+//whatsapp route
+Route::post('/whatsapp/send', [WhatsAppController::class, 'send'])->name('whatsapp.send');
 
 
