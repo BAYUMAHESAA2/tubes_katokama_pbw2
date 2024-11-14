@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WarungController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\UlasanController;
+use App\Http\Controllers\WhatsappController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -11,6 +13,7 @@ Route::get('/', function () {
 Route::get('/home', function () {
     return view('home');
 });
+
 
 Route::get('/warung', [WarungController::class, 'index'])->name('warung.index');
 Route::get('/warung/add', function () {
@@ -27,5 +30,9 @@ Route::post('/warung/{id}/menu', [WarungController::class, 'storeMenu'])->name('
 
 Route::get('/menu/create/{warung_id}', [MenuController::class, 'create'])->name('menu.create');
 Route::post('/menu/store', [MenuController::class, 'store'])->name('menu.store');
+
+Route::get('/warung/{warung_id}/ulasan', [UlasanController::class, 'index'])->name('ulasan.index');
+
+Route::post('/whatsapp/send', [WhatsAppController::class, 'send'])->name('whatsapp.send');
 
 

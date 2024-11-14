@@ -49,9 +49,6 @@
                     <li class="nav-item me-3">
                         <a class="nav-link fs-4 {{ Request::is('warung') ? 'text-warning' : 'text-secondary' }}" href="{{ url('/warung') }}">Warung</a>
                     </li>                    
-                    <li class="nav-item me-3">
-                        <a class="nav-link text-secondary fs-4" href="#">Bookmark</a>
-                    </li>
                     
                     <li class="nav-item d-flex align-items-center">
                         <form class="d-flex" role="search" action="{{ route('warung.search') }}" method="GET">
