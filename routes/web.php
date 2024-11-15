@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WarungController;
 use App\Http\Controllers\MenuController;
@@ -8,12 +9,31 @@ use App\Http\Controllers\WhatsappController;
 
 Route::get('/', function () {
     return view('welcome');
+})->name('home');
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/home', function () {
-    return view('home');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/warung', [WarungController::class, 'index'])->name('warung.index');
+    Route::get('/warung/search', [WarungController::class, 'search'])->name('warung.search');
 });
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/warung', [WarungController::class, 'index'])->name('warung.index');
+    Route::get('/warung/search', [WarungController::class, 'search'])->name('warung.search');
+});
+
+
+
+require __DIR__.'/auth.php';
 
 Route::get('/warung', [WarungController::class, 'index'])->name('warung.index');
 Route::get('/warung/add', function () {
@@ -34,5 +54,9 @@ Route::post('/menu/store', [MenuController::class, 'store'])->name('menu.store')
 Route::get('/warung/{warung_id}/ulasan', [UlasanController::class, 'index'])->name('ulasan.index');
 
 Route::post('/whatsapp/send', [WhatsAppController::class, 'send'])->name('whatsapp.send');
+
+// Pastikan rutenya mengarah ke controller yang sesuai
+Route::get('warung/{warung_id}/menu', [MenuController::class, 'index'])->name('warung.menu.index');
+
 
 

@@ -7,11 +7,10 @@
     <title>Menu</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
-        /* Menyesuaikan ukuran gambar di modal */
         .modal-body img {
             width: 100%;
             height: auto;
-            object-fit: cover; /* Mengisi area modal tanpa latar putih */
+            object-fit: cover; 
         }
     </style>
 </head>
@@ -37,17 +36,15 @@
                         <img src="{{ asset('img/' . $warung->image) }}" class="card-img-top img-fluid" alt="{{ $warung->nama_warung }}">
                     </a>
                     <div class="card-body">
-                        <a href="{{ route('ulasan.index', ['warung_id' => $warung->warung_id]) }}" class="btn btn-success mb-3">Lihat Ulasan</a>
+                        <a href="{{ route('ulasan.index', ['warung_id' => $warung->warung_id]) }}" class="btn btn-success mb-3">Berikan Penilaian</a>
                     </div>
                 </div>
             </div>
 
             <!-- Right column for menu items -->
             <div class="col-md-8">
-                <!-- Buttons for navigation and actions -->
                 <a href="{{ route('menu.create', ['warung_id' => $warung->warung_id]) }}" class="btn btn-primary mb-3">Tambah Menu</a>
-                
-                <!-- Form for submitting selected menu items via WhatsApp -->
+    
                 <form id="menuForm" method="POST" action="{{ route('whatsapp.send') }}">
                     @csrf
                     <table class="table">

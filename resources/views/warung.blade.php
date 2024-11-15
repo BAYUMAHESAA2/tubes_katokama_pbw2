@@ -1,8 +1,4 @@
-@extends('app')
-
-@section('title', 'Warung')
-
-@section('content')
+<x-app-layout>
     <div class="container">
         <div class="d-flex justify-content-end mb-3">
             <a href="{{ route('warung.add') }}" class="btn btn-success">Tambah Warung</a>
@@ -24,7 +20,7 @@
                         </div>
                     </div>
                 </div>
-
+    
                 <!-- Modal -->
                 <div class="modal fade" id="imageModal-{{ $w->warung_id }}" tabindex="-1"
                      aria-labelledby="imageModalLabel-{{ $w->warung_id }}" aria-hidden="true">
@@ -39,4 +35,4 @@
             @endforeach
         </div>
     </div>
-@endsection
+</x-app-layout>
