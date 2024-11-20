@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -27,9 +28,10 @@ class Menu extends Model
      */
     protected $fillable = [
         'warung_id',
+        'user_id',  // Menambahkan user_id yang sesuai dengan relasi
         'nama_menu',
         'harga',
-        'ketersediaan'
+        'ketersediaan',
     ];
 
     /**
@@ -38,7 +40,7 @@ class Menu extends Model
      * @var array
      */
     protected $attributes = [
-        'ketersediaan' => 'tersedia'
+        'ketersediaan' => 'tersedia',
     ];
 
     /**
@@ -50,7 +52,7 @@ class Menu extends Model
         'harga' => 'decimal:2',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'ketersediaan' => 'string'
+        'ketersediaan' => 'string',
     ];
 
     /**
@@ -61,5 +63,15 @@ class Menu extends Model
     public function warung(): BelongsTo
     {
         return $this->belongsTo(Warung::class, 'warung_id', 'warung_id');
+    }
+
+    /**
+     * Relasi dengan model User
+     *
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }
