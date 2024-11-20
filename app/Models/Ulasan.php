@@ -10,9 +10,23 @@ class Ulasan extends Model
     use HasFactory;
 
     /**
-     * The attributes that are mass assignable.
+     * Nama tabel yang terkait dengan model.
      *
-     * @var array<int, string>
+     * @var string
+     */
+    protected $table = 'ulasan';
+
+    /**
+     * Primary key yang digunakan pada tabel.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'ulasan_id';
+
+    /**
+     * Atribut yang dapat diisi secara massal.
+     *
+     * @var array
      */
     protected $fillable = [
         'user_id',
@@ -23,18 +37,22 @@ class Ulasan extends Model
     ];
 
     /**
-     * Get the user that owns the ulasan.
+     * Relasi dengan model User.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     /**
-     * Get the warung that owns the ulasan.
+     * Relasi dengan model Warung.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function warung()
     {
-        return $this->belongsTo(Warung::class, 'warung_id');
+        return $this->belongsTo(Warung::class, 'warung_id', 'warung_id');
     }
 }

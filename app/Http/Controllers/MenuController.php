@@ -37,26 +37,20 @@ class MenuController extends Controller
     }
 
     public function index(Request $request, $warung_id)
-{
-    $query = Menu::where('warung_id', $warung_id);
+    {
+        $query = Menu::where('warung_id', $warung_id);
 
-    // Jika ada input pencarian
-    if ($request->has('search') && $request->search != '') {
-        $search = $request->search;
-        $query->where('nama_menu', 'like', '%' . $search . '%');
+        // Jika ada input pencarian
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where('nama_menu', 'like', '%' . $search . '%');
+        }
+
+        // Ambil data menu berdasarkan pencarian
+        $warung = Warung::findOrFail($warung_id);
+        $menus = $query->get();
+
+        // Mengarahkan ke view yang ada di dalam folder warung
+        return view('warung.menu', compact('warung', 'menus'));
     }
-
-    // Ambil data menu berdasarkan pencarian
-    $warung = Warung::findOrFail($warung_id);
-    $menus = $query->get();
-
-    // Mengarahkan ke view yang ada di dalam folder warung
-    return view('warung.menu', compact('warung', 'menus'));
-}
-
-
-
-
-
-
 }

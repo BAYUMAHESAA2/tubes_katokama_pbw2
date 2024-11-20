@@ -25,7 +25,15 @@
         </div>
     </nav>
     <div class="container">
+        @if(session('success'))
+    <div class="alert alert-success mt-3">
+        {{ session('success') }}
+    </div>
+@endif
+
         <h2>Menu di Warung {{ $warung->nama_warung }}</h2>
+       
+
 
         <!-- Row with two columns: left for card, right for menu -->
         <div class="row">
@@ -37,6 +45,8 @@
                     </a>
                     <div class="card-body">
                         <a href="{{ route('ulasan.index', ['warung_id' => $warung->warung_id]) }}" class="btn btn-success mb-3">Berikan Penilaian</a>
+                        <a href="{{ route('ulasan.lihatUlasan', ['warung_id' => $warung->warung_id]) }}" class="btn btn-success mb-3">Lihat ulasan</a>
+
                     </div>
                 </div>
             </div>

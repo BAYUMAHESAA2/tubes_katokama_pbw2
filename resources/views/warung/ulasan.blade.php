@@ -42,11 +42,12 @@
                         <h4 class="mb-0">Form Penilaian dan Ulasan</h4>
                     </div>
                     <div class="card-body">
-                        <form action="" method="POST">
+                        <form action="{{ route('ulasan.store', $warung->warung_id) }}" method="POST">
+                            @csrf
                             <div class="mb-4">
                                 <label class="form-label">Rating</label>
                                 <div class="star-rating">
-                                    <input type="radio" id="star5" name="rating" value="5">
+                                    <input type="radio" id="star5" name="rating" value="5" required>
                                     <label for="star5" class="bi bi-star-fill"></label>
                                     <input type="radio" id="star4" name="rating" value="4">
                                     <label for="star4" class="bi bi-star-fill"></label>
@@ -58,25 +59,19 @@
                                     <label for="star1" class="bi bi-star-fill"></label>
                                 </div>
                             </div>
-
-                            {{-- <div class="mb-4">
-                                <label for="nama" class="form-label">Nama</label>
-                                <input type="text" class="form-control" id="nama" name="nama" required>
-                            </div> --}}
-
-
+                        
                             <div class="mb-4">
                                 <label for="ulasan" class="form-label">Ulasan</label>
-                                <textarea class="form-control" id="ulasan" name="ulasan" rows="4" required></textarea>
+                                <textarea class="form-control" id="ulasan" name="komentar" rows="4" required></textarea>
                             </div>
-
+                        
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-primary">Kirim Ulasan</button>
+                                <a href="{{ route('warung.menu', $warung->warung_id) }}" class="btn btn-secondary mt-3">Kembali ke Menu</a>
                             </div>
-
-        <a href="{{ route('warung.menu', $warung->warung_id) }}" class="btn btn-secondary mt-3">Kembali ke Menu</a>
-
                         </form>
+                        
+                        
                     </div>
                 </div>
             </div>
