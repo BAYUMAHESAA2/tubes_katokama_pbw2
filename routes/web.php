@@ -52,6 +52,7 @@ Route::get('warung/{warung_id}/menu', [MenuController::class, 'index'])->name('w
 Route::get('/menu/create/{warung_id}', [MenuController::class, 'create'])->name('menu.create');
 Route::post('/menu/store', [MenuController::class, 'store'])->name('menu.store');
 
+Route::get('/warung/{warung_id}/ulasan', [UlasanController::class, 'index'])->name('ulasan.index');
 
 Route::post('/whatsapp/send', [WhatsAppController::class, 'send'])->name('whatsapp.send');
 
