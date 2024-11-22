@@ -7,7 +7,7 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\UlasanController;
 use App\Http\Controllers\WhatsappController;
 
-Route::get('/', function () {
+Route::get('/foodexplore', function () {
     return view('welcome');
 })->name('home');
 
