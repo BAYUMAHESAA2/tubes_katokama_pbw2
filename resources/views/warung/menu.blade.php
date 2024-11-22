@@ -8,12 +8,13 @@
     <title>Menu</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
     <style>
         .modal-body img {
             width: 100%;
             height: auto;
             object-fit: cover;
-
         }
     </style>
 </head>
@@ -29,15 +30,20 @@
         </div>
     </nav>
     <div class="container">
-        @if (session('success'))
-            <div class="alert alert-success mt-3">
-                {{ session('success') }}
-            </div>
+        <!-- SweetAlert untuk pesan sukses -->
+        @if(session('success'))
+            <script>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: '{{ session('success') }}',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            </script>
         @endif
 
         <h2>Menu di Warung {{ $warung->nama_warung }}</h2>
-
-
 
         <!-- Row with two columns: left for card, right for menu -->
         <div class="row">
@@ -53,7 +59,6 @@
                             class="btn btn-success mb-3">Berikan Penilaian</a>
                         <a href="{{ route('ulasan.lihatUlasan', ['warung_id' => $warung->warung_id]) }}"
                             class="btn btn-success mb-3">Lihat ulasan</a>
-
                     </div>
                 </div>
             </div>
@@ -72,6 +77,7 @@
                                 <th scope="col">Makanan & Minuman</th>
                                 <th scope="col">Harga</th>
                                 <th scope="col">Ketersediaan</th>
+                                <th scope="col">Edit & Hapus</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -88,6 +94,24 @@
                                     <td>{{ $menu->nama_menu }}</td>
                                     <td>Rp{{ number_format($menu->harga, 2, ',', '.') }}</td>
                                     <td>{{ $menu->ketersediaan }}</td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="{{ route('menu.edit', ['warung' => $warung->warung_id, 'menu' => $menu->menu_id]) }}"
+                                                class="btn btn-warning btn-sm me-2">
+                                                <i class="bi bi-pencil"></i> Edit
+                                            </a>
+                                            <form id="delete-form-{{ $menu->menu_id }}"
+                                                action="{{ route('menu.destroy', ['warung' => $warung->warung_id, 'menu' => $menu->menu_id]) }}"
+                                                method="POST" class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button" class="btn btn-danger btn-sm"
+                                                    onclick="confirmDelete({{ $menu->menu_id }})">
+                                                    <i class="bi bi-trash"></i> Hapus
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -97,7 +121,6 @@
             </div>
         </div>
     </div>
-
 
     <!-- Modal for displaying image in full view -->
     <div class="modal fade" id="imageModal-{{ $warung->warung_id }}" tabindex="-1"
@@ -114,6 +137,25 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function confirmDelete(menuId) {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Menu yang dihapus tidak dapat dikembalikan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('delete-form-' + menuId).submit();
+                }
+            });
+        }
     </script>
 </body>
 

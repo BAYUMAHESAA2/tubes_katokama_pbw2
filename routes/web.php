@@ -49,6 +49,10 @@ Route::get('/warung/{id}/menu/add', [WarungController::class, 'addMenu'])->name(
 Route::post('/warung/{id}/menu', [WarungController::class, 'storeMenu'])->name('warung.menu.store');
 Route::get('warung/{warung_id}/menu', [MenuController::class, 'index'])->name('warung.menu.index');
 
+Route::get('/warung/{warung}/menu/{menu}/edit', [MenuController::class, 'edit'])->name('menu.edit');
+Route::put('/warung/{warung}/menu/{menu}', [MenuController::class, 'update'])->name('menu.update');
+Route::delete('/warung/{warung}/menu/{menu}', [MenuController::class, 'destroy'])->name('menu.destroy');
+
 Route::get('/menu/create/{warung_id}', [MenuController::class, 'create'])->name('menu.create');
 Route::post('/menu/store', [MenuController::class, 'store'])->name('menu.store');
 
@@ -66,6 +70,9 @@ Route::post('/warung/{warung_id}/ulasan', [UlasanController::class, 'store'])
     ->name('ulasan.store');
 
 Route::get('/ulasan/{warung_id}', [UlasanController::class, 'lihatUlasan'])->name('ulasan.lihatUlasan');
+Route::delete('/warung/{warung}/ulasan/{ulasan}', [UlasanController::class, 'hapus'])->name('warung.ulasan.hapus');
+
+
 
 
 
