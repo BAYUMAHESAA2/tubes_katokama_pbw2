@@ -53,4 +53,37 @@ class MenuController extends Controller
         // Mengarahkan ke view yang ada di dalam folder warung
         return view('warung.menu', compact('warung', 'menus'));
     }
+
+    public function edit($warung_id, $menu_id)
+    {
+        $menu = Menu::findOrFail($menu_id);
+        $warung = Warung::findOrFail($warung_id);
+        return view('warung.edit_menu', compact('menu', 'warung'));
+    }
+
+    public function update(Request $request, $warung_id, $menu_id)
+    {
+        $validatedData = $request->validate([
+            'nama_menu' => 'required|max:100',
+            'harga' => 'required|numeric',
+            'ketersediaan' => 'required|in:tersedia,habis'
+        ]);
+
+        $menu = Menu::findOrFail($menu_id);
+        $menu->update($validatedData);
+
+        return redirect()->route('warung.menu', $warung_id)
+            ->with('success', 'Menu berhasil diperbarui.');
+    }
+
+    public function destroy($warung_id, $menu_id)
+    {
+        $menu = Menu::findOrFail($menu_id);
+        $menu->delete();
+
+        return redirect()->route('warung.menu', $warung_id)
+            ->with('success', 'Menu berhasil dihapus.');
+    }
+
+    
 }

@@ -55,5 +55,17 @@ class UlasanController extends Controller
         // Kirim data ke view
         return view('warung.lihatUlasan', compact('warung'));
     }
-}
 
+    public function hapus($warung_id, $ulasan_id)
+    {
+        $ulasan = Ulasan::findOrFail($ulasan_id);
+
+        // Cek apakah user yang login adalah pemilik ulasan
+        if (Auth::id() !== $ulasan->user_id) {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk menghapus ulasan ini.');
+        }
+
+        $ulasan->delete();
+        return redirect()->back()->with('success', 'Ulasan berhasil dihapus.');
+    }
+}
