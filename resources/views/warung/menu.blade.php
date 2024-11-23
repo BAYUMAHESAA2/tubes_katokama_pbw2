@@ -16,6 +16,24 @@
             height: auto;
             object-fit: cover;
         }
+
+        .counter-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .counter-display {
+            min-width: 40px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .btn-counter {
+            padding: 0px 8px;
+            font-size: 14px;
+        }
     </style>
 </head>
 
@@ -30,7 +48,6 @@
         </div>
     </nav>
     <div class="container">
-        <!-- SweetAlert untuk pesan sukses -->
         @if(session('success'))
             <script>
                 Swal.fire({
@@ -45,9 +62,7 @@
 
         <h2>Menu di Warung {{ $warung->nama_warung }}</h2>
 
-        <!-- Row with two columns: left for card, right for menu -->
         <div class="row">
-            <!-- Left column for card -->
             <div class="col-md-4">
                 <div class="card mb-3">
                     <a href="#" data-bs-toggle="modal" data-bs-target="#imageModal-{{ $warung->warung_id }}">
@@ -63,7 +78,6 @@
                 </div>
             </div>
 
-            <!-- Right column for menu items -->
             <div class="col-md-8">
                 <a href="{{ route('menu.create', ['warung_id' => $warung->warung_id]) }}"
                     class="btn btn-primary mb-3">Tambah Menu</a>
@@ -74,6 +88,7 @@
                         <thead>
                             <tr>
                                 <th scope="col">Pilih</th>
+                                <th scope="col">Jumlah</th>
                                 <th scope="col">Makanan & Minuman</th>
                                 <th scope="col">Harga</th>
                                 <th scope="col">Ketersediaan</th>
@@ -85,10 +100,20 @@
                                 <tr>
                                     <td>
                                         <div class="form-check">
-                                            <input type="checkbox" class="form-check-input" name="selected_menu[]"
-                                                value="{{ $menu->id }}" id="menuCheck{{ $loop->index }}"
-                                                autocomplete="off">
-                                            <label class="form-check-label" for="menuCheck{{ $loop->index }}"></label>
+                                            <input type="checkbox" class="form-check-input menu-checkbox" 
+                                                name="selected_menu[]" value="{{ $menu->id }}" 
+                                                id="menuCheck{{ $loop->index }}" autocomplete="off"
+                                                onchange="toggleCounter({{ $loop->index }})">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="counter-container" id="counter{{ $loop->index }}" style="display: none;">
+                                            <button type="button" class="btn btn-danger btn-counter" 
+                                                onclick="decrease({{ $loop->index }})">-</button>
+                                            <div class="counter-display" id="count{{ $loop->index }}">0</div>
+                                            <button type="button" class="btn btn-success btn-counter" 
+                                                onclick="increase({{ $loop->index }})">+</button>
+                                            <input type="hidden" name="quantity[]" id="quantity{{ $loop->index }}" value="0">
                                         </div>
                                     </td>
                                     <td>{{ $menu->nama_menu }}</td>
@@ -122,7 +147,7 @@
         </div>
     </div>
 
-    <!-- Modal for displaying image in full view -->
+    <!-- Modal -->
     <div class="modal fade" id="imageModal-{{ $warung->warung_id }}" tabindex="-1"
         aria-labelledby="imageModalLabel-{{ $warung->warung_id }}" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -155,6 +180,37 @@
                     document.getElementById('delete-form-' + menuId).submit();
                 }
             });
+        }
+
+        function toggleCounter(index) {
+            const checkbox = document.getElementById('menuCheck' + index);
+            const counter = document.getElementById('counter' + index);
+            counter.style.display = checkbox.checked ? 'flex' : 'none';
+            
+            if (!checkbox.checked) {
+                document.getElementById('count' + index).textContent = '0';
+                document.getElementById('quantity' + index).value = '0';
+            }
+        }
+
+        function increase(index) {
+            const countDisplay = document.getElementById('count' + index);
+            const quantityInput = document.getElementById('quantity' + index);
+            let count = parseInt(countDisplay.textContent);
+            count++;
+            countDisplay.textContent = count;
+            quantityInput.value = count;
+        }
+
+        function decrease(index) {
+            const countDisplay = document.getElementById('count' + index);
+            const quantityInput = document.getElementById('quantity' + index);
+            let count = parseInt(countDisplay.textContent);
+            if (count > 0) {
+                count--;
+                countDisplay.textContent = count;
+                quantityInput.value = count;
+            }
         }
     </script>
 </body>
