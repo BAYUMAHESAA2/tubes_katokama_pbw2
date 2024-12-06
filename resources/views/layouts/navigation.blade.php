@@ -1,72 +1,81 @@
-<nav class="navbar navbar-expand-lg" style="background-color: #7B0A0A; color: #ffffff;">
-    <div class="container">
-        <a class="navbar-brand custom-link" href="{{ route('dashboard') }}">{{ config('app.name') }}</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+<nav class="navbar bg-merahtua navbar-expand-lg fixed-top navbar-dark" style="box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);">
+    <div class="container-fluid">
+        <!-- Logo -->
+        <a class="navbar-brand me-5">
+            <img src="{{ asset('img/logo_FoodExplore.png') }}" alt="FoodExplore Logo" class="img-fluid" style="max-width: 110px; height: auto;">
+        </a>
+    
+        <!-- Mobile Toggle Button -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <!-- Navbar Items Centered -->
-            <ul class="navbar-nav mx-auto mb-2 mb-lg-0"> <!-- Center the navbar items -->
-                <li class="nav-item">
-                    @auth
-                        <a class="nav-link custom-link" aria-current="page" href="{{ route('dashboard') }}">Dashboard</a>
-                    @else
-                        <a class="nav-link custom-link" aria-current="page" href="{{ route('home') }}">Home</a>
-                    @endauth
-                </li>
-                @auth
-                <li class="nav-item">
-                    <a class="nav-link custom-link" href="{{ route('warung.index') }}">Warung</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link custom-link" href="#">Role</a>
-                </li>
-                    <li class="nav-item d-flex align-items-center">
-                        <form class="d-flex" role="search" action="{{ route('warung.search') }}" method="GET">
-                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search_query">
-                            <button class="btn btn-outline-success" type="submit">Search</button>
-                        </form>
-                    </li>
-                    @endauth
-                    
-            </ul>
 
-            @auth
-                <ul class="d-flex navbar-nav">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle custom-link" href="#" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            {{ Auth::user()->name }} <br>
-                            <span class="fw-lighter fs-6">{{ Auth::user()->email }}</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Profile</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                        onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                        {{ __('Log Out') }}</a>
-                                </form>
-                            </li>
-                        </ul>
+        <!-- Offcanvas Menu -->
+        <div class="offcanvas offcanvas-end bg-merahtua" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas-header">
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+
+            <div class="offcanvas-header" style="box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                <a href="{{ route('profile.edit') }}" role="button" class="nav-link text-white d-flex align-items-center gap-3">
+                    <!-- Foto Profil -->
+                    <img src="{{ asset('img/foto_profil.png') }}" alt="Profile" class="rounded-circle" style="width: 65px; height: 65px; object-fit: cover;">
+                    
+                    <!-- Nama dan Peran -->
+                    <div>
+                        <p class="fs-4 mb-0">{{ Auth::user()->name }}</p>
+                        <small class="text-white-50">Admin</small>
+                    </div>
+                </a>
+            </div>
+
+            <div class="offcanvas-body">
+                <!-- Navigation Links -->
+                @auth
+                <ul class="navbar-nav me-auto ms-0 ms-lg-5 fs-4">
+                    <li class="nav-item me-5">
+                        <a class="{{ request()->is('dashboard') ? 'nav-link text-warning active' : 'nav-link' }}" aria-current="page" href="{{route('dashboard')}}">Beranda</a>
+                    </li>
+                    
+                    <hr class="my-2 text-light opacity-50">
+                    
+                    <li class="nav-item me-5">
+                        <a class="{{ request()->is('warung') ? 'nav-link text-warning active' : 'nav-link' }}" aria-current="page" href="{{route('warung.index')}}">Warung</a>
+                    </li>
+
+                    <hr class="my-2 text-light opacity-50">
+
+                    <li class="nav-item me-5 mb-2 mb-lg-0">
+                        <a class="{{ request()->is('riwayat') ? 'nav-link text-warning active' : 'nav-link' }}" aria-current="page" href="">Riwayat</a>
                     </li>
                 </ul>
-            @else
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link custom-link" href="{{ route('login') }}">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link custom-link" href="{{ route('register') }}">Register</a>
-                    </li>
-                </ul>
-            @endauth
+                @endauth
+
+                <!-- Search and Profile Section -->
+                @auth
+                <div class="d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center gap-3">
+                    <!-- Search Form -->
+                    <form class="d-flex flex-grow-1" role="search" action="{{ route('warung.search') }}" method="GET">
+                        <input class="form-control me-2" type="search" placeholder="Cari Warung" aria-label="Search" name="search_query">
+                        <button class="btn btn-warning" type="submit">Cari</button>
+                    </form>
+
+                    <!-- Foto Profil -->
+                    <a href="{{ route('profile.edit') }}" class="d-none d-lg-flex align-items-center mx-3" role="button">
+                        <img src="{{ asset('img/foto_profil.png') }}" alt="Profile" class="rounded-circle" style="width: 65px; height: 65px; object-fit: cover;">
+                    </a>
+                </div>
+                @endauth
+            </div>
+            
+            <div class="d-lg-none pt-2 text-center" style="box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);">
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="btn btn-link text-decoration-none text-white">   
+                        <p class="fs-4 ">Keluar</p>
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 </nav>

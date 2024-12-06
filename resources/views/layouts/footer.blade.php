@@ -1,42 +1,30 @@
-<footer class="text-white text-center py-1 mt-auto">
-    <div class="container p-4">
-        <!-- Row -->
-        <div class="row d-flex align-items-start">
-            <!-- About Us Column -->
-            <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
-                <h5 class="fw-bold" style="font-size: 20px;">Tentang Kami</h5>
-                <p style="font-size: 14px;">
-                    Website ini mempermudah pencarian makanan dengan jasa pengiriman khusus
-                    bagi anak asrama Telkom University, menyediakan fitur pencarian makanan,
-                    penilaian, dan ulasan.
-                </p>
-            </div>
-            <!-- Contact Us Column -->
-            <div class="col-lg-3 col-md-6 ms-auto text-start">
-                <h5 class="fw-bold" style="font-size: 20px;">Kontak Kami</h5>
-                <ul class="list-unstyled mb-0">
-                    <li class="d-flex align-items-center">
-                        <style>
-                            .white-icon {
-                                filter: invert(1) brightness(2);
-                            }
-                        </style>
-                        <img src="{{ asset('img/whatsapp.png') }}" alt="Icon" class="white-icon"
-                            style="width: 20px; height: 20px; margin-right: 8px;">
+<footer class="bg-merahtua text-white text-center">
+    <div class="container">
+        <div class="pt-3 mt-2">
+            <h3>Tentang Kami</h3>
 
-                        <p class="mb-0" style="font-size: 14px;">082141676046</p>
-                    </li>
-                    <li class="d-flex align-items-center mt-2">
-                        <img src="{{ asset('img/instagram.png') }}" alt="Icon" class="white-icon"
-                            style="width: 20px; height: 20px; margin-right: 8px;">
-                        <p class="mb-0" style="font-size: 14px;">food.explore_</p>
-                    </li>
-                </ul>
-            </div>
+            <p class="text-white-50">Sebuah website yang bertujuan memberikan informasi untuk mempermudah pencarian makanan dengan jasa
+                pengiriman yang dikhususkan bagi anak asrama Telkom University, yang menyediakan fitur pencarian makanan,
+                penilaian, dan ulasan.
+            </p>
         </div>
-        <!-- Copyright -->
-        <div class="text-center p-0 mt-0">
-            Created by Katokama Team | 2024
-        </div>
+    </div>
+
+    <div class="my-4 d-flex justify-content-center align-items-center">
+        <a href="https://api.whatsapp.com/send?phone=6282141676046&text=Berikan%20saran%20anda%20tentang%20website%20ini" target='_blank' class="text-decoration-none text-light mx-4 border border-2 border-light rounded-circle d-flex justify-content-center align-items-center" style="width: 35px; height: 35px;">
+            <i class="bi bi-telephone"></i>
+        </a>
+
+        <a href="https://www.instagram.com/food.explore_" target='_blank' class="text-decoration-none text-light mx-4 border border-2 border-light rounded-circle d-flex justify-content-center align-items-center" style="width: 35px; height: 35px;">
+            <i class="bi bi-instagram"></i>
+        </a>
+
+        <a href="mailto:bagasaldianata20@gmail.com" class="text-decoration-none text-light mx-4 border border-2 border-light rounded-circle d-flex justify-content-center align-items-center" style="width: 35px; height: 35px;">
+            <i class="bi bi-envelope"></i>
+        </a>
+    </div>
+
+    <div class="bg-footermerah pt-3 d-flex justify-content-center align-items-center">
+        <p>&copy;2024 Food Explore</p>
     </div>
 </footer>
