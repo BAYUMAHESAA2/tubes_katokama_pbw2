@@ -21,6 +21,16 @@
                             <p class="card-text">No. WA: {{ $w->no_wa }}</p>
                             <p class="card-text">Status Pengantaran: {{ $w->status_pengantaran }}</p>
                             <a href="{{ route('warung.menu', $w->warung_id) }}" class="btn btn-warning">Menu</a>
+                            @auth
+                            @if (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Warung'))
+                            <a href="{{ route('warung.edit', $w->warung_id) }}" class="btn btn-primary">Edit</a>
+                                <form action="{{ route('warung.destroy', $w->warung_id) }}" method="POST" style="display: inline-block;" id="deleteForm-{{ $w->warung_id }}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="button" class="btn btn-danger" onclick="deleteWarung({{ $w->warung_id }})">Hapus</button>
+                                </form>
+                            @endif
+                            @endauth
                         </div>
                     </div>
                 </div>
@@ -39,4 +49,24 @@
             @endforeach
         </div>
     </div>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function deleteWarung(warungId) {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: 'Warung ini akan dihapus!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('deleteForm-' + warungId).submit();
+                }
+            });
+        }
+    </script>
 </x-app-layout>

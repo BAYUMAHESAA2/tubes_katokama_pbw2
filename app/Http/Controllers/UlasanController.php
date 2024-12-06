@@ -21,7 +21,6 @@ class UlasanController extends Controller
         $warung = Warung::findOrFail($warung_id);
         $ulasan = $warung->ulasan; // Get all reviews for this warung
 
-        // Return the ulasan view with the reviews, using the correct folder path
         return view('warung.ulasan', compact('warung', 'ulasan'));
     }
     public function store(Request $request, $warung_id)
@@ -56,16 +55,20 @@ class UlasanController extends Controller
         return view('warung.lihatUlasan', compact('warung'));
     }
 
-    public function hapus($warung_id, $ulasan_id)
-    {
+    public function hapus($warung_id, $ulasan_id) {
         $ulasan = Ulasan::findOrFail($ulasan_id);
-
-        // Cek apakah user yang login adalah pemilik ulasan
-        if (Auth::id() !== $ulasan->user_id) {
-            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk menghapus ulasan ini.');
+    
+        if (Auth::user()->hasRole('Admin')) {
+            $ulasan->delete();
+            return redirect()->back()->with('success', 'Ulasan berhasil dihapus.');
         }
-
-        $ulasan->delete();
-        return redirect()->back()->with('success', 'Ulasan berhasil dihapus.');
+    
+        if (Auth::id() === $ulasan->user_id) {
+            $ulasan->delete();
+            return redirect()->back()->with('success', 'Ulasan berhasil dihapus.');
+        }
+    
+        return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk menghapus ulasan ini.');
     }
+    
 }

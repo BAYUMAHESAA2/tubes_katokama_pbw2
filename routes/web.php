@@ -33,7 +33,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/warung/search', [WarungController::class, 'search'])->name('warung.search');
 });
 
-
+Route::middleware(['auth', 'role:Admin|Warung'])->group(function () {
+    Route::delete('/warung/{warung}', [WarungController::class, 'destroy'])->name('warung.destroy');
+    Route::get('warung/{id}/edit', [WarungController::class, 'edit'])->name('warung.edit');
+    Route::put('warung/{id}', [WarungController::class, 'update'])->name('warung.update');
+});
 
 require __DIR__.'/auth.php';
 
@@ -72,12 +76,16 @@ Route::post('/warung/{warung_id}/ulasan', [UlasanController::class, 'store'])
     ->name('ulasan.store');
 
 Route::get('/ulasan/{warung_id}', [UlasanController::class, 'lihatUlasan'])->name('ulasan.lihatUlasan');
-Route::delete('/warung/{warung}/ulasan/{ulasan}', [UlasanController::class, 'hapus'])->name('warung.ulasan.hapus');
-
+Route::middleware(['auth', 'role:Admin|Warung'])->group(function () {
+    Route::delete('/warung/{warung}/ulasan/{ulasan}', [UlasanController::class, 'hapus'])->name('warung.ulasan.hapus');
+});
 
 Route::middleware(['role:Admin'])->group(function () {
     Route::get('/role', [RoleController::class, 'index'])->name('role.index');
 });
+
+
+
 
 
 

@@ -60,7 +60,7 @@
                                     <td>{{ $ulasan->komentar }}</td>
                                     <td>{{ $ulasan->created_at->format('d-m-Y H:i') }}</td>
                                     <td>
-                                        @if(Auth::check() && Auth::id() === $ulasan->user_id)
+                                        @if(Auth::check() && (Auth::user()->hasRole('Admin') || Auth::id() === $ulasan->user_id))
                                             <form id="delete-form-{{ $ulasan->ulasan_id }}" 
                                                   action="{{ route('warung.ulasan.hapus', ['warung' => $warung->warung_id, 'ulasan' => $ulasan->ulasan_id]) }}" 
                                                   method="POST">
@@ -73,6 +73,9 @@
                                             </form>
                                         @endif
                                     </td>
+                                    
+                                    
+                                              
                                 </tr>
                             @endforeach
                         </tbody>
