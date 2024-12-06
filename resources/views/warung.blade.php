@@ -1,7 +1,11 @@
 <x-app-layout>
     <div class="container">
         <div class="d-flex justify-content-end mb-3">
-            <a href="{{ route('warung.add') }}" class="btn btn-success">Tambah Warung</a>
+            @auth
+                @if (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Warung'))
+                    <a href="{{ route('warung.add') }}" class="btn btn-success">Tambah Warung</a>
+                @endif
+            @endauth
         </div>
         <div class="row">
             @foreach ($warung as $w)

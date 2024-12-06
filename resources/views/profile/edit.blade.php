@@ -3,7 +3,7 @@
         <div class="col-12 col-md-3 d-flex flex-column justify-content-center align-items-center py-4">
             <!-- Profile Image -->
                 <div class="mb-4">
-                    <img src="{{ asset('img/foto_profil.png') }}" alt="Profile" class="rounded-circle" style="width: 140px; height: 140px; object-fit: cover;">
+                    <img src="{{ asset('img/profile-user.png') }}" alt="Profile" class="rounded-circle" style="width: 140px; height: 140px; object-fit: cover;">
                 </div>
 
                 <!-- Button -->

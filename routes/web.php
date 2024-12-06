@@ -1,11 +1,13 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\WarungController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UlasanController;
+use App\Http\Controllers\WarungController;
 use App\Http\Controllers\WhatsappController;
+use Illuminate\Support\Facades\Route;
+
 
 Route::get('/foodexplore', function () {
     return view('welcome');
@@ -71,6 +73,11 @@ Route::post('/warung/{warung_id}/ulasan', [UlasanController::class, 'store'])
 
 Route::get('/ulasan/{warung_id}', [UlasanController::class, 'lihatUlasan'])->name('ulasan.lihatUlasan');
 Route::delete('/warung/{warung}/ulasan/{ulasan}', [UlasanController::class, 'hapus'])->name('warung.ulasan.hapus');
+
+
+Route::middleware(['role:Admin'])->group(function () {
+    Route::get('/role', [RoleController::class, 'index'])->name('role.index');
+});
 
 
 
