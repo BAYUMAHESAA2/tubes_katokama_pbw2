@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class WhatsappController extends Controller
+class WhatsAppController extends Controller
 {
     public function send(Request $request)
     {
@@ -15,8 +15,8 @@ class WhatsappController extends Controller
         }
 
         $message = 'Saya ingin memesan:\n' . implode("\n", $menuItems);
-        $whatsappNumber = '081271500301'; // Ganti dengan nomor WhatsApp yang sesuai
-        $url = "https://api.whatsapp.com/send?phone={$whatsappNumber}&text=" . urlencode($message);
+        $whatsappNumber = '6282141676046'; // Ganti dengan nomor WhatsApp yang sesuai
+        $url = "https://api.whatsapp.com/send?phone={{$whatsappNumber}}&text=" . urlencode($message);
 
         return redirect()->away($url);
     }

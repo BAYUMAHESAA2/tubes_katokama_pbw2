@@ -141,7 +141,11 @@
                             @endforeach
                         </tbody>
                     </table>
-                    <button type="submit" class="btn btn-success">Pesan via Whatsapp</button>
+                    <form method="POST" action="/whatsapp/send">
+                        @csrf
+                             <!-- Checkbox dan jumlah pesanan -->
+                        <button type="button" class="btn btn-success">Pesan via WhatsApp</button>
+                    </form>
                 </form>
             </div>
         </div>
