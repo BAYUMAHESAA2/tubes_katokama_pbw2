@@ -20,8 +20,15 @@
                     <a class="nav-link custom-link" href="{{ route('warung.index') }}">Warung</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link custom-link" href="#">Role</a>
+                    @auth
+                        @if (Auth::user()->hasRole('Admin'))
+                            <a class="nav-link custom-link" href="{{ route('role.index') }}">Role</a>
+                        @endif
+                    @endauth
                 </li>
+                
+
+                
                     <li class="nav-item d-flex align-items-center">
                         <form class="d-flex" role="search" action="{{ route('warung.search') }}" method="GET">
                             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search_query">
