@@ -27,10 +27,20 @@
             </div>
 
             <!-- Pilih Role -->
-            <div class="mt-2">
+            <!-- <div class="mt-2">
                 <x-input-label for="role" :value="__('Register As')" />
                 <select id="role" name="role" class="block mt-1 w-full" required>
                     <option value="User">User</option>
+                    <option value="Warung">Warung</option>
+                </select>
+                <x-input-error :messages="$errors->get('role')" class="mt-2" />
+            </div> -->
+
+            <div class="mt-2">
+                <x-input-label for="role" :value="__('Register As')" />
+                <select id="role" name="role" class="form-select mt-1" aria-label="Default select example" required>
+                    <option selected>Pilih role anda</option>
+                    <option value="User">Pembeli</option>
                     <option value="Warung">Warung</option>
                 </select>
                 <x-input-error :messages="$errors->get('role')" class="mt-2" />

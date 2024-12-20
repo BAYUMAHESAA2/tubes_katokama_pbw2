@@ -30,7 +30,7 @@
                     <!-- Nama dan Peran -->
                     <div>
                         <p class="fs-4 mb-0">{{ Auth::user()->name }}</p>
-                        <small class="text-white-50">Admin</small>
+                        <small class="text-white-50">{{ Auth::user()->getRoleNames() }}</small>
                     </div>
                 </a>
             </div>

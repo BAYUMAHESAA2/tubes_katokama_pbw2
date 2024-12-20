@@ -33,4 +33,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Warung::class, 'user_id', 'id');
     }
+
+    public function getRoleNames(): string
+    {
+        return $this->roles->pluck('name')->implode(', ');
+    }
 }
