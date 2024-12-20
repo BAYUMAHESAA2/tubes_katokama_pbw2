@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Menu;
 use App\Models\Warung;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class MenuController extends Controller
 {
@@ -84,8 +85,6 @@ class MenuController extends Controller
         return redirect()->route('warung.menu', $warung_id)
             ->with('success', 'Menu berhasil dihapus.');
     }
-
-    
 
     
 }

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 
@@ -15,14 +16,21 @@ class RoleSeeder extends Seeder
         Role::create(['name' => 'User']);
         Role::create(['name' => 'Warung']);
 
-        // Assign role ke user tertentu
+        // Membuat akun admin
+        $admin = User::create([
+            'id' => 1,
+            'name' => 'Admin',
+            'email' => 'admin@gmail.com',
+            'email_verified_at' => null,
+            'password' => Hash::make('12345678'),
+            'photo_profile' => null,
+            'remember_token' => null,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
         $admin = User::find(1); // Ganti dengan ID admin
+        // Assign role ke admin
         $admin->assignRole('Admin');
-
-        $user = User::find(2); // Ganti dengan ID user
-        $user->assignRole('User');
-
-        $warung = User::find(3); // Ganti dengan ID warung
-        $warung->assignRole('Warung');
     }
 }

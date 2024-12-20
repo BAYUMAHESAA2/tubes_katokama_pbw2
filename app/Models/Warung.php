@@ -5,30 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Warung extends Model
 {
     use HasFactory;
 
-    /**
-     * Nama tabel yang terkait dengan model.
-     *
-     * @var string
-     */
     protected $table = 'warung';
-
-    /**
-     * Primary key yang digunakan pada tabel.
-     *
-     * @var string
-     */
     protected $primaryKey = 'warung_id';
 
-    /**
-     * Atribut yang dapat diisi secara massal.
-     *
-     * @var array
-     */
     protected $fillable = [
         'nama_warung',
         'slug',
@@ -36,44 +21,33 @@ class Warung extends Model
         'no_wa',
         'status_pengantaran',
         'image',
+        'user_id', // Tambahkan 'user_id' agar dapat diisi secara massal
     ];
 
-    /**
-     * Atribut yang memiliki nilai default.
-     *
-     * @var array
-     */
     protected $attributes = [
         'status_pengantaran' => 'aktif',
     ];
 
-    /**
-     * Aturan casting atribut.
-     *
-     * @var array
-     */
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
 
-    /**
-     * Relasi dengan model Menu.
-     *
-     * @return HasMany
-     */
+    // Relasi dengan model Menu
     public function menu(): HasMany
     {
         return $this->hasMany(Menu::class, 'warung_id', 'warung_id');
     }
 
-    /**
-     * Relasi dengan model Ulasan.
-     *
-     * @return HasMany
-     */
+    // Relasi dengan model Ulasan
     public function ulasan(): HasMany
     {
         return $this->hasMany(Ulasan::class, 'warung_id', 'warung_id');
+    }
+
+    // Relasi dengan model User
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }
