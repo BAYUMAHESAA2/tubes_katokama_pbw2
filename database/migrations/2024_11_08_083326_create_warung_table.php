@@ -19,7 +19,17 @@ return new class extends Migration
             $table->string('no_wa', 15);
             $table->enum('status_pengantaran', ['aktif', 'tidak aktif'])->default('aktif');
             $table->string('image')->nullable();
+            
+            // Tambahkan kolom user_id dengan foreign key
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
+
             $table->timestamps();
+
+            Schema::table('warung', function (Blueprint $table) {
+                $table->unsignedBigInteger('user_id'); // Menambahkan kolom user_id
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            });
         });
     }
 
@@ -29,6 +39,5 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('warung');
-        
     }
 };
