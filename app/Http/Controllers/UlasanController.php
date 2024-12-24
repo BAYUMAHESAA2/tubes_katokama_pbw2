@@ -16,13 +16,13 @@ class UlasanController extends Controller
      * @return \Illuminate\View\View
      */
     public function index($warung_id)
-    {
-        // Retrieve the warung and its related ulasan
-        $warung = Warung::findOrFail($warung_id);
-        $ulasan = $warung->ulasan; // Get all reviews for this warung
+{
+    $warung = Warung::findOrFail($warung_id);
+    $ulasan = $warung->ulasan;
+    $hasReviewed = $this->hasUserReviewed($warung_id);
 
-        return view('warung.ulasan', compact('warung', 'ulasan'));
-    }
+    return view('warung.ulasan', compact('warung', 'ulasan', 'hasReviewed'));
+}
     public function store(Request $request, $warung_id)
     {
         // Validasi input
@@ -36,14 +36,14 @@ class UlasanController extends Controller
 
         // Simpan ulasan
         Ulasan::create([
-            'user_id' => Auth::id(), // Ambil user_id dari pengguna yang login
-            'warung_id' => $warung->warung_id, // Ambil warung_id dari parameter
+            'user_id' => Auth::id(),
+            'warung_id' => $warung->warung_id,
             'rating' => $request->input('rating'),
             'komentar' => $request->input('komentar'),
         ]);
 
-        // Redirect kembali ke halaman menu dengan pesan sukses
-        return redirect()->route('warung.menu', $warung_id)
+        // Redirect ke halaman lihat ulasan dengan pesan sukses
+        return redirect()->route('ulasan.lihatUlasan', $warung_id)
             ->with('success', 'Ulasan berhasil dikirim.');
     }
     public function lihatUlasan($warung_id)
@@ -55,20 +55,27 @@ class UlasanController extends Controller
         return view('warung.lihatUlasan', compact('warung'));
     }
 
-    public function hapus($warung_id, $ulasan_id) {
+    public function hapus($warung_id, $ulasan_id)
+    {
         $ulasan = Ulasan::findOrFail($ulasan_id);
-    
+
         if (Auth::user()->hasRole('Admin')) {
             $ulasan->delete();
             return redirect()->back()->with('success', 'Ulasan berhasil dihapus.');
         }
-    
+
         if (Auth::id() === $ulasan->user_id) {
             $ulasan->delete();
             return redirect()->back()->with('success', 'Ulasan berhasil dihapus.');
         }
-    
+
         return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk menghapus ulasan ini.');
     }
-    
+
+    public function hasUserReviewed($warung_id)
+{
+    return Ulasan::where('warung_id', $warung_id)
+        ->where('user_id', Auth::id())
+        ->exists();
+}
 }

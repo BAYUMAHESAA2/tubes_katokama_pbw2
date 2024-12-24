@@ -69,12 +69,14 @@
                 @auth
                     <div class="d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center gap-3">
                         <!-- Search Form -->
-                        <form class="d-flex flex-grow-1" role="search" action="{{ route('warung.search') }}"
-                            method="GET">
-                            <input class="form-control me-2" type="search" placeholder="Cari Warung" aria-label="Search"
-                                name="search_query">
-                            <button class="btn btn-warning" type="submit">Cari</button>
-                        </form>
+                        @if (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('User'))
+                            <form class="d-flex flex-grow-1" role="search" action="{{ route('warung.search') }}"
+                                method="GET">
+                                <input class="form-control me-2" type="search" placeholder="Cari Warung"
+                                    aria-label="Search" name="search_query" value="{{ request('search_query') }}">
+                                <button class="btn btn-warning" type="submit">Cari</button>
+                            </form>
+                        @endif
 
                         <!-- Foto Profil -->
                         <a href="{{ route('profile.edit') }}" class="d-none d-lg-flex align-items-center mx-3"

@@ -85,6 +85,6 @@ class MenuController extends Controller
         return redirect()->route('warung.menu', $warung_id)
             ->with('success', 'Menu berhasil dihapus.');
     }
-
     
+
 }

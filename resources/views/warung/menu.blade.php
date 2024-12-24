@@ -44,7 +44,7 @@
         </div>
     </nav>
     <div class="container">
-        @if(session('success'))
+        @if (session('success'))
             <script>
                 Swal.fire({
                     icon: 'success',
@@ -66,8 +66,16 @@
                     <div class="card-body">
                         @auth
                             @if (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('User'))
-                                <a href="{{ route('ulasan.index', ['warung_id' => $warung->warung_id]) }}"
-                                    class="btn btn-success mb-3">Berikan Penilaian</a>
+                                @php
+                                    $hasReviewed = App\Models\Ulasan::where('warung_id', $warung->warung_id)
+                                        ->where('user_id', Auth::id())
+                                        ->exists();
+                                @endphp
+
+                                @if (!$hasReviewed)
+                                    <a href="{{ route('ulasan.index', ['warung_id' => $warung->warung_id]) }}"
+                                        class="btn btn-success mb-3">Berikan Penilaian</a>
+                                @endif
                             @endif
                         @endauth
                         <a href="{{ route('ulasan.lihatUlasan', ['warung_id' => $warung->warung_id]) }}"
@@ -84,13 +92,15 @@
                     @endif
                 @endauth
 
-                <form id="menuForm" method="POST" action="{{ route('whatsapp.send') }}">
-                    @csrf
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">Pilih</th>
-                                <th scope="col">Jumlah</th>
+                                @auth
+                                    @if (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('User'))
+                                        <th scope="col">Pilih</th>
+                                        <th scope="col">Jumlah</th>
+                                    @endif
+                                @endauth
                                 <th scope="col">Makanan & Minuman</th>
                                 <th scope="col">Harga</th>
                                 <th scope="col">Ketersediaan</th>
@@ -104,24 +114,38 @@
                         <tbody>
                             @foreach ($warung->menu as $menu)
                                 <tr>
-                                    <td>
-                                        <div class="form-check">
-                                            <input type="checkbox" class="form-check-input menu-checkbox"
-                                                name="selected_menu[]" value="{{ $menu->id }}"
-                                                id="menuCheck{{ $loop->index }}" autocomplete="off"
-                                                onchange="toggleCounter({{ $loop->index }})">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="counter-container" id="counter{{ $loop->index }}" style="display: none;">
-                                            <button type="button" class="btn btn-danger btn-counter" 
-                                                onclick="decrease({{ $loop->index }})">-</button>
-                                            <div class="counter-display" id="count{{ $loop->index }}">0</div>
-                                            <button type="button" class="btn btn-success btn-counter" 
-                                                onclick="increase({{ $loop->index }})">+</button>
-                                            <input type="hidden" name="quantity[]" id="quantity{{ $loop->index }}" value="0">
-                                        </div>
-                                    </td>
+                                    @auth
+                                        @if (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('User'))
+                                            <td>
+                                                @if ($menu->ketersediaan !== 'habis')
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input menu-checkbox"
+                                                            name="selected_menu[]" value="{{ $menu->id }}"
+                                                            id="menuCheck{{ $loop->index }}" autocomplete="off"
+                                                            onchange="toggleCounter({{ $loop->index }})">
+                                                    </div>
+                                                @else
+                                                    <span class="text-danger">Tidak tersedia</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($menu->ketersediaan !== 'habis')
+                                                    <div class="counter-container" id="counter{{ $loop->index }}"
+                                                        style="display: none;">
+                                                        <button type="button" class="btn btn-danger btn-counter"
+                                                            onclick="decrease({{ $loop->index }})">-</button>
+                                                        <div class="counter-display" id="count{{ $loop->index }}">0</div>
+                                                        <button type="button" class="btn btn-success btn-counter"
+                                                            onclick="increase({{ $loop->index }})">+</button>
+                                                        <input type="hidden" name="quantity[]"
+                                                            id="quantity{{ $loop->index }}" value="0">
+                                                    </div>
+                                                @else
+                                                    <span class="text-danger">Tidak tersedia</span>
+                                                @endif
+                                            </td>
+                                        @endif
+                                    @endauth
                                     <td>{{ $menu->nama_menu }}</td>
                                     <td>Rp{{ number_format($menu->harga, 2, ',', '.') }}</td>
                                     <td>{{ $menu->ketersediaan }}</td>
@@ -152,10 +176,13 @@
                         </tbody>
                     </table>
                     <form method="POST" action="/whatsapp/send">
-                        @csrf
-                        <button type="button" class="btn btn-success">Pesan via WhatsApp</button>
+                        @auth
+                            @if (Auth::user()->hasRole('User') || Auth::user()->hasRole('Admin'))
+                                @csrf
+                                <button type="button" class="btn btn-success">Pesan via WhatsApp</button>
+                            @endif
+                        @endauth
                     </form>
-                </form>
             </div>
         </div>
     </div>
@@ -217,6 +244,7 @@
                 document.getElementById('quantity' + index).value = current - 1;
             }
         }
+        
     </script>
 </body>
 

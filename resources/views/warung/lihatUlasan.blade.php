@@ -47,7 +47,9 @@
                                 <th>Rating</th>
                                 <th>Komentar</th>
                                 <th>Tanggal</th>
-                                <th>Hapus</th>
+                                @if(Auth::check() && (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('User')))
+                                    <th>Hapus</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -59,24 +61,26 @@
                                     </td>
                                     <td>{{ $ulasan->komentar }}</td>
                                     <td>{{ $ulasan->created_at->format('d-m-Y H:i') }}</td>
-                                    <td>
-                                        @if(Auth::check() && (Auth::user()->hasRole('Admin') || Auth::id() === $ulasan->user_id))
-                                            <form id="delete-form-{{ $ulasan->ulasan_id }}" 
-                                                  action="{{ route('warung.ulasan.hapus', ['warung' => $warung->warung_id, 'ulasan' => $ulasan->ulasan_id]) }}" 
-                                                  method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="button" class="btn btn-danger btn-sm" 
-                                                        onclick="confirmDelete({{ $ulasan->ulasan_id }})">
-                                                    <i class="bi bi-trash"></i> Hapus
-                                                </button>
-                                            </form>
-                                        @endif
-                                    </td>
-                                       
+                                    @if(Auth::check() && (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('User')))
+                                        <td>
+                                            @if(Auth::id() === $ulasan->user_id || Auth::user()->hasRole('Admin'))
+                                                <form id="delete-form-{{ $ulasan->ulasan_id }}" 
+                                                      action="{{ route('warung.ulasan.hapus', ['warung' => $warung->warung_id, 'ulasan' => $ulasan->ulasan_id]) }}" 
+                                                      method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="button" class="btn btn-danger btn-sm" 
+                                                            onclick="confirmDelete({{ $ulasan->ulasan_id }})">
+                                                        <i class="bi bi-trash"></i> Hapus
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>
+                        
                     </table>
                 </div>
             @endif
