@@ -86,5 +86,6 @@ class MenuController extends Controller
             ->with('success', 'Menu berhasil dihapus.');
     }
     
+    
 
 }
