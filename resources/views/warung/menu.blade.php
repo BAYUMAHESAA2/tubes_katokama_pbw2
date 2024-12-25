@@ -34,6 +34,15 @@
             padding: 0px 8px;
             font-size: 14px;
         }
+
+        #address {
+            resize: none;
+            height: auto;
+            overflow-y: hidden;
+            line-height: 1.5;
+            max-height: 1.5em;
+            padding: 6px;
+        }
     </style>
 </head>
 
@@ -43,7 +52,7 @@
             <a href="{{ route('warung.index') }}" class="btn btn-secondary mb-3">Kembali</a>
         </div>
     </nav>
-    <div class="container">
+    <div class="container my-4">
         @if (session('success'))
             <script>
                 Swal.fire({
@@ -55,14 +64,15 @@
                 });
             </script>
         @endif
-        <h2>Menu di Warung {{ $warung->nama_warung }}</h2>
+
+        <h2 class="mb-4">Menu di Warung {{ $warung->nama_warung }}</h2>
+
         <div class="row">
-            <div class="col-md-4">
-                <div class="card mb-3">
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#imageModal-{{ $warung->warung_id }}">
-                        <img src="{{ asset('img/' . $warung->image) }}" class="card-img-top img-fluid"
-                            alt="{{ $warung->nama_warung }}">
-                    </a>
+            <!-- Sidebar Kiri -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="{{ asset('img/' . $warung->image) }}" class="card-img-top img-fluid"
+                        alt="{{ $warung->nama_warung }}">
                     <div class="card-body">
                         @auth
                             @if (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('User'))
@@ -74,16 +84,17 @@
 
                                 @if (!$hasReviewed)
                                     <a href="{{ route('ulasan.index', ['warung_id' => $warung->warung_id]) }}"
-                                        class="btn btn-success mb-3">Berikan Penilaian</a>
+                                        class="btn btn-success w-100 mb-2">Berikan Penilaian</a>
                                 @endif
                             @endif
                         @endauth
                         <a href="{{ route('ulasan.lihatUlasan', ['warung_id' => $warung->warung_id]) }}"
-                            class="btn btn-success mb-3">Lihat ulasan</a>
+                            class="btn btn-success w-100">Lihat Ulasan</a>
                     </div>
                 </div>
             </div>
 
+            <!-- Konten Utama -->
             <div class="col-md-8">
                 @auth
                     @if (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Warung'))
@@ -92,109 +103,123 @@
                     @endif
                 @endauth
 
-                    <table class="table">
-                        <thead>
+                <!-- Tabel berada di luar form -->
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            @auth
+                                @if (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('User'))
+                                    <th scope="col">Pilih</th>
+                                    <th scope="col">Jumlah</th>
+                                @endif
+                            @endauth
+                            <th scope="col">Makanan & Minuman</th>
+                            <th scope="col">Harga</th>
+                            <th scope="col">Ketersediaan</th>
+                            @auth
+                                @if (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Warung'))
+                                    <th scope="col">Edit & Hapus</th>
+                                @endif
+                            @endauth
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($warung->menu as $menu)
                             <tr>
                                 @auth
                                     @if (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('User'))
-                                        <th scope="col">Pilih</th>
-                                        <th scope="col">Jumlah</th>
+                                        <td>
+                                            @if ($menu->ketersediaan !== 'habis')
+                                                <div class="form-check">
+                                                    <input type="checkbox"
+                                                        class="form-check-input menu-checkbox"
+                                                        value="{{ $menu->menu_id }}"
+                                                        data-menu-name="{{ $menu->nama_menu }}"
+                                                        data-menu-price="{{ $menu->harga }}"
+                                                        id="menuCheck{{ $loop->index }}"
+                                                        onchange="toggleCounter({{ $loop->index }})">
+                                                </div>
+                                            @else
+                                                <span class="text-danger">Tidak tersedia</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($menu->ketersediaan !== 'habis')
+                                                <div class="counter-container" id="counter{{ $loop->index }}" style="display: none;">
+                                                    <button type="button" class="btn btn-danger btn-counter" onclick="decrease({{ $loop->index }})">-</button>
+                                                    <div class="counter-display" id="count{{ $loop->index }}">0</div>
+                                                    <input type="hidden" id="quantity{{ $loop->index }}" value="0">
+                                                    <button type="button" class="btn btn-success btn-counter" onclick="increase({{ $loop->index }})">+</button>
+                                                </div>
+                                            @else
+                                                <span class="text-danger">Tidak tersedia</span>
+                                            @endif
+                                        </td>
                                     @endif
                                 @endauth
-                                <th scope="col">Makanan & Minuman</th>
-                                <th scope="col">Harga</th>
-                                <th scope="col">Ketersediaan</th>
+                                <td>{{ $menu->nama_menu }}</td>
+                                <td>Rp{{ number_format($menu->harga, 2, ',', '.') }}</td>
+                                <td>{{ $menu->ketersediaan }}</td>
                                 @auth
                                     @if (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Warung'))
-                                        <th scope="col">Edit & Hapus</th>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a href="{{ route('menu.edit', ['warung' => $warung->warung_id, 'menu' => $menu->menu_id]) }}" class="btn btn-warning btn-sm me-2">
+                                                    <i class="bi bi-pencil"></i> Edit
+                                                </a>
+                                                <form id="delete-form-{{ $menu->menu_id }}"
+                                                    action="{{ route('menu.destroy', ['warung' => $warung->warung_id, 'menu' => $menu->menu_id]) }}"
+                                                    method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete({{ $menu->menu_id }})">
+                                                        <i class="bi bi-trash"></i> Hapus
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
                                     @endif
                                 @endauth
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($warung->menu as $menu)
-                                <tr>
-                                    @auth
-                                        @if (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('User'))
-                                            <td>
-                                                @if ($menu->ketersediaan !== 'habis')
-                                                    <div class="form-check">
-                                                        <input type="checkbox" class="form-check-input menu-checkbox"
-                                                            name="selected_menu[]" value="{{ $menu->id }}"
-                                                            id="menuCheck{{ $loop->index }}" autocomplete="off"
-                                                            onchange="toggleCounter({{ $loop->index }})">
-                                                    </div>
-                                                @else
-                                                    <span class="text-danger">Tidak tersedia</span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                @if ($menu->ketersediaan !== 'habis')
-                                                    <div class="counter-container" id="counter{{ $loop->index }}"
-                                                        style="display: none;">
-                                                        <button type="button" class="btn btn-danger btn-counter"
-                                                            onclick="decrease({{ $loop->index }})">-</button>
-                                                        <div class="counter-display" id="count{{ $loop->index }}">0</div>
-                                                        <button type="button" class="btn btn-success btn-counter"
-                                                            onclick="increase({{ $loop->index }})">+</button>
-                                                        <input type="hidden" name="quantity[]"
-                                                            id="quantity{{ $loop->index }}" value="0">
-                                                    </div>
-                                                @else
-                                                    <span class="text-danger">Tidak tersedia</span>
-                                                @endif
-                                            </td>
-                                        @endif
-                                    @endauth
-                                    <td>{{ $menu->nama_menu }}</td>
-                                    <td>Rp{{ number_format($menu->harga, 2, ',', '.') }}</td>
-                                    <td>{{ $menu->ketersediaan }}</td>
-                                    @auth
-                                        @if (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Warung'))
-                                            <td>
-                                                <div class="btn-group" role="group">
-                                                    <a href="{{ route('menu.edit', ['warung' => $warung->warung_id, 'menu' => $menu->menu_id]) }}"
-                                                        class="btn btn-warning btn-sm me-2">
-                                                        <i class="bi bi-pencil"></i> Edit
-                                                    </a>
-                                                    <form id="delete-form-{{ $menu->menu_id }}"
-                                                        action="{{ route('menu.destroy', ['warung' => $warung->warung_id, 'menu' => $menu->menu_id]) }}"
-                                                        method="POST" class="d-inline">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="button" class="btn btn-danger btn-sm"
-                                                            onclick="confirmDelete({{ $menu->menu_id }})">
-                                                            <i class="bi bi-trash"></i> Hapus
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </td>
-                                        @endif
-                                    @endauth
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    <form method="POST" action="/whatsapp/send">
-                        @auth
-                            @if (Auth::user()->hasRole('User') || Auth::user()->hasRole('Admin'))
-                                @csrf
-                                <button type="button" class="btn btn-success">Pesan via WhatsApp</button>
-                            @endif
-                        @endauth
-                    </form>
+                        @endforeach
+                    </tbody>
+                </table>
+
+                <!-- Form hanya untuk submit -->
+                <form id="orderForm" onsubmit="sendWhatsAppMessage(event)">
+                    @csrf
+                    <input type="hidden" id="warungPhone" value="{{ $warung->no_wa }}">
+                    <input type="hidden" id="selectedMenus" name="selectedMenus">
+                    <input type="hidden" id="menuQuantities" name="menuQuantities">
+
+                    <!-- Alamat dan Tombol WhatsApp -->
+                    @auth
+                        @if (Auth::user()->hasRole('User') || Auth::user()->hasRole('Admin'))
+                            <div class="mb-3">
+                                <label for="address" class="form-label"><b>Alamat:</b></label>
+                                <textarea id="address" class="form-control" rows="1" placeholder="Masukkan alamat Anda"></textarea>
+                            </div>
+
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="bi bi-whatsapp"></i> Pesan via WhatsApp
+                                </button>
+                            </div>
+                        @endif
+                    @endauth
+                </form>
             </div>
         </div>
-    </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="imageModal-{{ $warung->warung_id }}" tabindex="-1"
-        aria-labelledby="imageModalLabel-{{ $warung->warung_id }}" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-body p-0">
-                    <img src="{{ asset('img/' . $warung->image) }}" class="img-fluid"
-                        alt="{{ $warung->nama_warung }}">
+        <!-- Modal -->
+        <div class="modal fade" id="imageModal-{{ $warung->warung_id }}" tabindex="-1"
+            aria-labelledby="imageModalLabel-{{ $warung->warung_id }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-body p-0">
+                        <img src="{{ asset('img/' . $warung->image) }}" class="img-fluid"
+                            alt="{{ $warung->nama_warung }}">
+                    </div>
                 </div>
             </div>
         </div>
@@ -244,7 +269,69 @@
                 document.getElementById('quantity' + index).value = current - 1;
             }
         }
-        
+
+        function sendWhatsAppMessage(event) {
+            event.preventDefault();
+
+            let message = "Saya ingin memesan:\n\n";
+            let totalPrice = 0;
+
+            // Get all checked menu items
+            const checkedMenus = document.querySelectorAll('.menu-checkbox:checked');
+
+            let orderNumber = 1; // Initialize order counter
+            checkedMenus.forEach((checkbox) => {
+                const menuName = checkbox.dataset.menuName;
+                const menuPrice = parseFloat(checkbox.dataset.menuPrice);
+                const menuIndex = checkbox.id.replace('menuCheck', ''); // Extract the index from checkbox ID
+                const quantity = parseInt(document.getElementById('quantity' + menuIndex).value);
+
+                if (quantity > 0) {
+                    const itemTotal = menuPrice * quantity;
+                    totalPrice += itemTotal;
+                    message += `${orderNumber}. ${menuName} (${quantity}) = Rp${itemTotal.toLocaleString('id-ID')}\n`;
+                    orderNumber++;
+                }
+            });
+
+            if (totalPrice > 0) {
+                message += `\nTotal = Rp${totalPrice.toLocaleString('id-ID')}\n`;
+
+                // Get address
+                const address = document.getElementById('address').value.trim();
+                if (address) {
+                    message += `Alamat: ${address}`;
+                } else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Oops...',
+                        text: 'Silakan masukkan alamat Anda terlebih dahulu!'
+                    });
+                    return; // Stop execution if no address is provided
+                }
+
+                // Get warung phone number
+                const warungPhone = document.getElementById('warungPhone').value;
+
+                // Format phone number
+                let formattedPhone = warungPhone.replace(/\D/g, '');
+                if (!formattedPhone.startsWith('62')) {
+                    formattedPhone = formattedPhone.replace(/^0/, '62');
+                }
+
+                // Encode message for URL
+                const encodedMessage = encodeURIComponent(message);
+
+                // Open WhatsApp with pre-filled message
+                window.open(`https://wa.me/${formattedPhone}?text=${encodedMessage}`, '_blank');
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Silakan pilih menu dan jumlah pesanan terlebih dahulu!'
+                });
+            }
+        }
     </script>
 </body>
 

@@ -24,8 +24,10 @@
                 <a href="{{ route('profile.edit') }}" role="button"
                     class="nav-link text-white d-flex align-items-center gap-3">
                     <!-- Foto Profil -->
-                    <img src="{{ asset('img/foto_profil.png') }}" alt="Profile" class="rounded-circle"
-                        style="width: 65px; height: 65px; object-fit: cover;">
+                    <img src="{{ auth()->user()->photo_profile ? asset(auth()->user()->photo_profile) : asset('img/profile-user.png') }}" 
+                    alt="Profile" 
+                    class="rounded-circle"
+                    style="width: 65px; height: 65px; object-fit: cover;">
 
                     <!-- Nama dan Peran -->
                     <div>
@@ -57,7 +59,15 @@
                             @auth
                                 @if (Auth::user()->hasRole('Admin'))
                                     <a class="{{ request()->is('riwayat') ? 'nav-link text-warning active' : 'nav-link' }}"
-                                        aria-current="page" href="">Role</a>
+                                        aria-current="page" href="">Manage Account</a>
+                                @endif
+                            @endauth
+                        </li>
+                        <li class="nav-item me-5 mb-2 mb-lg-0">
+                            @auth
+                                @if (Auth::user()->hasRole('Admin'))
+                                    <a class="{{ request()->is('riwayat') ? 'nav-link text-warning active' : 'nav-link' }}"
+                                        aria-current="page" href="">Manage Role</a>
                                 @endif
                             @endauth
                         </li>
@@ -79,10 +89,11 @@
                         @endif
 
                         <!-- Foto Profil -->
-                        <a href="{{ route('profile.edit') }}" class="d-none d-lg-flex align-items-center mx-3"
-                            role="button">
-                            <img src="{{ asset('img/profile-user.png') }}" alt="Profile" class="rounded-circle"
-                                style="width: 65px; height: 65px; object-fit: cover;">
+                        <a href="{{ route('profile.edit') }}" class="d-none d-lg-flex align-items-center mx-3" role="button">
+                            <img src="{{ auth()->user()->photo_profile ? asset(auth()->user()->photo_profile) : asset('img/profile-user.png') }}" 
+                                 alt="Profile" 
+                                 class="rounded-circle"
+                                 style="width: 65px; height: 65px; object-fit: cover;">
                         </a>
                     </div>
                 @endauth

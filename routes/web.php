@@ -84,9 +84,11 @@ Route::middleware(['auth', 'role:Admin|User'])->group(function () {
     Route::delete('/warung/{warung}/ulasan/{ulasan}', [UlasanController::class, 'hapus'])->name('warung.ulasan.hapus');
 });
 
-Route::middleware(['role:Admin'])->group(function () {
-    Route::get('/role', [RoleController::class, 'index'])->name('role.index');
-});
+
+Route::put('/profile/photo', [ProfileController::class, 'updateFoto'])->name('profile.photo');
+Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+
 
 
 
