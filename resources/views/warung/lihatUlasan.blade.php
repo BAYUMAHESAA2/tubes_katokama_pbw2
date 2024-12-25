@@ -61,7 +61,7 @@
                                     </td>
                                     <td>{{ $ulasan->komentar }}</td>
                                     <td>{{ $ulasan->created_at->format('d-m-Y H:i') }}</td>
-                                    @if(Auth::check() && (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('User')))
+                                    @if(Auth::check() && (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('User') || Auth::user()->hasRole('Warung')))
                                         <td>
                                             @if(Auth::id() === $ulasan->user_id || Auth::user()->hasRole('Admin'))
                                                 <form id="delete-form-{{ $ulasan->ulasan_id }}" 

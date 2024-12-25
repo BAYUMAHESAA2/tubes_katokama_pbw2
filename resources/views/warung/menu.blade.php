@@ -75,7 +75,7 @@
                         alt="{{ $warung->nama_warung }}">
                     <div class="card-body">
                         @auth
-                            @if (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('User'))
+                            @can('tambah ulasan')
                                 @php
                                     $hasReviewed = App\Models\Ulasan::where('warung_id', $warung->warung_id)
                                         ->where('user_id', Auth::id())
@@ -86,10 +86,13 @@
                                     <a href="{{ route('ulasan.index', ['warung_id' => $warung->warung_id]) }}"
                                         class="btn btn-success w-100 mb-2">Berikan Penilaian</a>
                                 @endif
-                            @endif
+                            @endcan
+
+                            @can('lihat ulasan')
+                                <a href="{{ route('ulasan.lihatUlasan', ['warung_id' => $warung->warung_id]) }}"
+                                    class="btn btn-success w-100">Lihat Ulasan</a>
+                            @endcan
                         @endauth
-                        <a href="{{ route('ulasan.lihatUlasan', ['warung_id' => $warung->warung_id]) }}"
-                            class="btn btn-success w-100">Lihat Ulasan</a>
                     </div>
                 </div>
             </div>
@@ -97,13 +100,12 @@
             <!-- Konten Utama -->
             <div class="col-md-8">
                 @auth
-                    @if (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Warung'))
+                    @can('tambah menu')
                         <a href="{{ route('menu.create', ['warung_id' => $warung->warung_id]) }}"
                             class="btn btn-primary mb-3">Tambah Menu</a>
-                    @endif
+                    @endcan
                 @endauth
 
-                <!-- Tabel berada di luar form -->
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
@@ -117,7 +119,7 @@
                             <th scope="col">Harga</th>
                             <th scope="col">Ketersediaan</th>
                             @auth
-                                @if (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Warung'))
+                                @if (auth()->user()->can('edit menu') || auth()->user()->can('hapus menu'))
                                     <th scope="col">Edit & Hapus</th>
                                 @endif
                             @endauth
@@ -131,10 +133,8 @@
                                         <td>
                                             @if ($menu->ketersediaan !== 'habis')
                                                 <div class="form-check">
-                                                    <input type="checkbox"
-                                                        class="form-check-input menu-checkbox"
-                                                        value="{{ $menu->menu_id }}"
-                                                        data-menu-name="{{ $menu->nama_menu }}"
+                                                    <input type="checkbox" class="form-check-input menu-checkbox"
+                                                        value="{{ $menu->menu_id }}" data-menu-name="{{ $menu->nama_menu }}"
                                                         data-menu-price="{{ $menu->harga }}"
                                                         id="menuCheck{{ $loop->index }}"
                                                         onchange="toggleCounter({{ $loop->index }})">
@@ -145,11 +145,14 @@
                                         </td>
                                         <td>
                                             @if ($menu->ketersediaan !== 'habis')
-                                                <div class="counter-container" id="counter{{ $loop->index }}" style="display: none;">
-                                                    <button type="button" class="btn btn-danger btn-counter" onclick="decrease({{ $loop->index }})">-</button>
+                                                <div class="counter-container" id="counter{{ $loop->index }}"
+                                                    style="display: none;">
+                                                    <button type="button" class="btn btn-danger btn-counter"
+                                                        onclick="decrease({{ $loop->index }})">-</button>
                                                     <div class="counter-display" id="count{{ $loop->index }}">0</div>
                                                     <input type="hidden" id="quantity{{ $loop->index }}" value="0">
-                                                    <button type="button" class="btn btn-success btn-counter" onclick="increase({{ $loop->index }})">+</button>
+                                                    <button type="button" class="btn btn-success btn-counter"
+                                                        onclick="increase({{ $loop->index }})">+</button>
                                                 </div>
                                             @else
                                                 <span class="text-danger">Tidak tersedia</span>
@@ -161,21 +164,28 @@
                                 <td>Rp{{ number_format($menu->harga, 2, ',', '.') }}</td>
                                 <td>{{ $menu->ketersediaan }}</td>
                                 @auth
-                                    @if (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Warung'))
+                                    @if (auth()->user()->can('edit menu') || auth()->user()->can('hapus menu'))
                                         <td>
                                             <div class="btn-group" role="group">
-                                                <a href="{{ route('menu.edit', ['warung' => $warung->warung_id, 'menu' => $menu->menu_id]) }}" class="btn btn-warning btn-sm me-2">
-                                                    <i class="bi bi-pencil"></i> Edit
-                                                </a>
-                                                <form id="delete-form-{{ $menu->menu_id }}"
-                                                    action="{{ route('menu.destroy', ['warung' => $warung->warung_id, 'menu' => $menu->menu_id]) }}"
-                                                    method="POST" class="d-inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete({{ $menu->menu_id }})">
-                                                        <i class="bi bi-trash"></i> Hapus
-                                                    </button>
-                                                </form>
+                                                @can('edit menu')
+                                                    <a href="{{ route('menu.edit', ['warung' => $warung->warung_id, 'menu' => $menu->menu_id]) }}"
+                                                        class="btn btn-warning btn-sm me-2">
+                                                        <i class="bi bi-pencil"></i> Edit
+                                                    </a>
+                                                @endcan
+
+                                                @can('hapus menu')
+                                                    <form id="delete-form-{{ $menu->menu_id }}"
+                                                        action="{{ route('menu.destroy', ['warung' => $warung->warung_id, 'menu' => $menu->menu_id]) }}"
+                                                        method="POST" class="d-inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="button" class="btn btn-danger btn-sm"
+                                                            onclick="confirmDelete({{ $menu->menu_id }})">
+                                                            <i class="bi bi-trash"></i> Hapus
+                                                        </button>
+                                                    </form>
+                                                @endcan
                                             </div>
                                         </td>
                                     @endif
@@ -184,45 +194,60 @@
                         @endforeach
                     </tbody>
                 </table>
+                @auth
+                    @if (Auth::user()->hasRole('User') || Auth::user()->hasRole('Admin'))
+                        <div class="card mt-4">
+                            <div class="card-body">
+                                <form id="orderForm" onsubmit="sendWhatsAppMessage(event)">
+                                    @csrf
+                                    <input type="hidden" id="warungPhone" value="{{ $warung->no_wa }}">
+                                    <input type="hidden" id="selectedMenus" name="selectedMenus">
+                                    <input type="hidden" id="menuQuantities" name="menuQuantities">
 
-                <!-- Form hanya untuk submit -->
-                <form id="orderForm" onsubmit="sendWhatsAppMessage(event)">
-                    @csrf
-                    <input type="hidden" id="warungPhone" value="{{ $warung->no_wa }}">
-                    <input type="hidden" id="selectedMenus" name="selectedMenus">
-                    <input type="hidden" id="menuQuantities" name="menuQuantities">
-
-                    <!-- Alamat dan Tombol WhatsApp -->
-                    @auth
-                        @if (Auth::user()->hasRole('User') || Auth::user()->hasRole('Admin'))
-                            <div class="mb-3">
-                                <label for="address" class="form-label"><b>Alamat:</b></label>
-                                <textarea id="address" class="form-control" rows="1" placeholder="Masukkan alamat Anda"></textarea>
+                                    <div class="row align-items-end">
+                                        <div class="col-md-8">
+                                            <label for="address" class="form-label"><b>Alamat:</b></label>
+                                            <textarea id="address" class="form-control" rows="1" placeholder="Masukkan alamat Anda"></textarea>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <button type="submit" class="btn btn-success w-100">
+                                                <i class="bi bi-whatsapp"></i> Pesan via WhatsApp
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-
-                            <div class="d-flex justify-content-end">
-                                <button type="submit" class="btn btn-success">
-                                    <i class="bi bi-whatsapp"></i> Pesan via WhatsApp
-                                </button>
-                            </div>
-                        @endif
-                    @endauth
-                </form>
+                        </div>
+                    @endif
+                @endauth
             </div>
         </div>
+    </div>
 
-        <!-- Modal -->
-        <div class="modal fade" id="imageModal-{{ $warung->warung_id }}" tabindex="-1"
-            aria-labelledby="imageModalLabel-{{ $warung->warung_id }}" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content">
-                    <div class="modal-body p-0">
-                        <img src="{{ asset('img/' . $warung->image) }}" class="img-fluid"
-                            alt="{{ $warung->nama_warung }}">
-                    </div>
+    <!-- Form hanya untuk submit -->
+    <form id="orderForm" onsubmit="sendWhatsAppMessage(event)">
+        @csrf
+        <input type="hidden" id="warungPhone" value="{{ $warung->no_wa }}">
+        <input type="hidden" id="selectedMenus" name="selectedMenus">
+        <input type="hidden" id="menuQuantities" name="menuQuantities">
+
+        <!-- Alamat dan Tombol WhatsApp -->
+
+    </form>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="imageModal-{{ $warung->warung_id }}" tabindex="-1"
+        aria-labelledby="imageModalLabel-{{ $warung->warung_id }}" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+                    <img src="{{ asset('img/' . $warung->image) }}" class="img-fluid"
+                        alt="{{ $warung->nama_warung }}">
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
@@ -289,7 +314,8 @@
                 if (quantity > 0) {
                     const itemTotal = menuPrice * quantity;
                     totalPrice += itemTotal;
-                    message += `${orderNumber}. ${menuName} (${quantity}) = Rp${itemTotal.toLocaleString('id-ID')}\n`;
+                    message +=
+                        `${orderNumber}. ${menuName} (${quantity}) = Rp${itemTotal.toLocaleString('id-ID')}\n`;
                     orderNumber++;
                 }
             });

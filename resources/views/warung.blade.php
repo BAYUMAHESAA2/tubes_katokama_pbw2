@@ -28,29 +28,29 @@
                             <p class="card-text">Alamat: {{ $w->alamat }}</p>
                             <p class="card-text">No. WA: {{ $w->no_wa }}</p>
                             <p class="card-text">Status Pengantaran: {{ $w->status_pengantaran }}</p>
-                            <!-- Tombol Menu -->
+                            
                             @auth
-                                @if (Auth::user()->hasRole('User'))
-                                    @if ($w->status_pengantaran === 'aktif')
+                                @can('lihat menu')
+                                    @if (auth()->user()->hasRole('User'))
+                                        @if ($w->status_pengantaran === 'aktif')
+                                            <a href="{{ route('warung.menu', $w->warung_id) }}" class="btn btn-warning">Menu</a>
+                                        @endif
+                                    @else
                                         <a href="{{ route('warung.menu', $w->warung_id) }}" class="btn btn-warning">Menu</a>
                                     @endif
-                                @else
-                                    <!-- Tampilkan tombol Menu untuk Admin atau Warung tanpa memeriksa status pengantaran -->
-                                    <a href="{{ route('warung.menu', $w->warung_id) }}" class="btn btn-warning">Menu</a>
-                                @endif
-                            @endauth
-
-                            @auth
-                                @if (Auth::user()->hasRole('Admin') || (Auth::user()->hasRole('Warung') && Auth::id() === $w->user_id))
-                                    <a href="{{ route('warung.edit', $w->warung_id) }}" class="btn btn-primary">Edit</a>
-                                    <form action="{{ route('warung.destroy', $w->warung_id) }}" method="POST"
-                                        style="display: inline-block;" id="deleteForm-{{ $w->warung_id }}">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="button" class="btn btn-danger"
-                                            onclick="deleteWarung({{ $w->warung_id }})">Hapus</button>
-                                    </form>
-                                @endif
+                                @endcan
+                        
+                                @can('edit warung')
+                                        <a href="{{ route('warung.edit', $w->warung_id) }}" class="btn btn-primary">Edit</a>
+                                @endcan
+                        
+                                @can('hapus warung')
+                                        <form action="{{ route('warung.destroy', $w->warung_id) }}" method="POST" style="display: inline-block;" id="deleteForm-{{ $w->warung_id }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" class="btn btn-danger" onclick="deleteWarung({{ $w->warung_id }})">Hapus</button>
+                                        </form>
+                                @endcan
                             @endauth
                         </div>
                     </div>

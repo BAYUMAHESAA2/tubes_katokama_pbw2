@@ -58,20 +58,20 @@
                         <li class="nav-item me-5 mb-2 mb-lg-0">
                             @auth
                                 @if (Auth::user()->hasRole('Admin'))
-                                    <a class="{{ request()->is('riwayat') ? 'nav-link text-warning active' : 'nav-link' }}"
-                                        aria-current="page" href="">Manage Account</a>
+                                    <a class="{{ request()->is('manage-account') ? 'nav-link text-warning active' : 'nav-link' }}"
+                                       aria-current="page" href="{{ route('manageAccount.index') }}">Manage Account</a>
                                 @endif
                             @endauth
                         </li>
                         <li class="nav-item me-5 mb-2 mb-lg-0">
                             @auth
                                 @if (Auth::user()->hasRole('Admin'))
-                                    <a class="{{ request()->is('riwayat') ? 'nav-link text-warning active' : 'nav-link' }}"
-                                        aria-current="page" href="">Manage Role</a>
+                                    <a class="{{ request()->is('manage-role') ? 'nav-link text-warning active' : 'nav-link' }}"
+                                       aria-current="page" href="{{ route('manageRole.list') }}">Manage Role</a>
                                 @endif
                             @endauth
                         </li>
-
+                        
                     </ul>
                 @endauth
 

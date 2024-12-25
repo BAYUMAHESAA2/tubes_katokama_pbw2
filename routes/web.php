@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ManageAccountController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
@@ -7,6 +8,7 @@ use App\Http\Controllers\UlasanController;
 use App\Http\Controllers\WarungController;
 use App\Http\Controllers\WhatsappController;
 use Illuminate\Support\Facades\Route;
+
 
 
 Route::get('/foodexplore', function () {
@@ -31,15 +33,13 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/warung', [WarungController::class, 'index'])->name('warung.index');
     Route::get('/warung/search', [WarungController::class, 'search'])->name('warung.search');
-});
-
-Route::middleware(['auth', 'role:Admin|Warung'])->group(function () {
     Route::delete('/warung/{warung}', [WarungController::class, 'destroy'])->name('warung.destroy');
-    Route::get('warung/{id}/edit', [WarungController::class, 'edit'])->name('warung.edit');
     Route::put('warung/{id}', [WarungController::class, 'update'])->name('warung.update');
+    Route::get('warung/{id}/edit', [WarungController::class, 'edit'])->name('warung.edit');
 });
 
-require __DIR__.'/auth.php';
+
+require __DIR__ . '/auth.php';
 
 Route::get('/warung', [WarungController::class, 'index'])->name('warung.index');
 Route::get('/warung/add', function () {
@@ -80,7 +80,7 @@ Route::post('/warung/{warung_id}/ulasan', [UlasanController::class, 'store'])
     ->name('ulasan.store');
 
 Route::get('/ulasan/{warung_id}', [UlasanController::class, 'lihatUlasan'])->name('ulasan.lihatUlasan');
-Route::middleware(['auth', 'role:Admin|User'])->group(function () {
+Route::middleware(['auth', 'role:Admin|User|Warung'])->group(function () {
     Route::delete('/warung/{warung}/ulasan/{ulasan}', [UlasanController::class, 'hapus'])->name('warung.ulasan.hapus');
 });
 
@@ -88,18 +88,26 @@ Route::middleware(['auth', 'role:Admin|User'])->group(function () {
 Route::put('/profile/photo', [ProfileController::class, 'updateFoto'])->name('profile.photo');
 Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+Route::middleware(['auth', 'role:Admin'])->group(function () {
+    Route::get('/manage-role', [RoleController::class, 'index'])->name('manageRole.list');
+});
 
 
+Route::middleware(['auth', 'role:Admin'])->group(function () {
+    // Menampilkan daftar akun
+    Route::get('/manage-account', [ManageAccountController::class, 'index'])->name('manageAccount.index');
 
+    // Mengedit akun (optional)
+    Route::get('/manage-account/edit/{id}', [ManageAccountController::class, 'edit'])->name('manageAccount.edit');
 
+    // Menghapus akun
+    Route::delete('/manage-account/delete/{id}', [ManageAccountController::class, 'destroy'])->name('manageAccount.delete');
+    Route::get('/manageAccount/createAccount', [App\Http\Controllers\ManageAccountController::class, 'create'])->name('manageAccount.createAccount');
+    Route::post('/manageAccount/store', [App\Http\Controllers\ManageAccountController::class, 'store'])->name('manageAccount.store');
+    Route::get('/manageAccount', [App\Http\Controllers\ManageAccountController::class, 'index'])->name('manageAccount.index');
+    Route::delete('/manageAccount/{id}', [App\Http\Controllers\ManageAccountController::class, 'delete'])->name('manageAccount.delete');
 
-
-
-
-
-
-
-
-
-
-
+    Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
+    Route::get('/roles/{role}/edit', [RoleController::class, 'edit'])->name('roles.edit');
+    Route::put('/roles/{role}', [RoleController::class, 'update'])->name('roles.update');
+});
