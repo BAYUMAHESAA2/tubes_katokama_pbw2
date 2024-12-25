@@ -20,7 +20,7 @@
                         <!-- Gambar Warung -->
                         <a href="#" data-bs-toggle="modal" data-bs-target="#imageModal-{{ $w->warung_id }}">
                             <img src="{{ asset('img/' . $w->image) }}" class="card-img-top img-fluid"
-                                 style="height: 200px; width: 100%; object-fit: cover;" alt="{{ $w->nama_warung }}">
+                                style="height: 200px; width: 100%; object-fit: cover;" alt="{{ $w->nama_warung }}">
                         </a>
                         <!-- Informasi Warung -->
                         <div class="card-body" style="text-align: center; padding: 15px; background-color: #f9f9f9;">
@@ -28,14 +28,27 @@
                             <p class="card-text">Alamat: {{ $w->alamat }}</p>
                             <p class="card-text">No. WA: {{ $w->no_wa }}</p>
                             <p class="card-text">Status Pengantaran: {{ $w->status_pengantaran }}</p>
-                            <a href="{{ route('warung.menu', $w->warung_id) }}" class="btn btn-warning">Menu</a>
+                            <!-- Tombol Menu -->
+                            @auth
+                                @if (Auth::user()->hasRole('User'))
+                                    @if ($w->status_pengantaran === 'aktif')
+                                        <a href="{{ route('warung.menu', $w->warung_id) }}" class="btn btn-warning">Menu</a>
+                                    @endif
+                                @else
+                                    <!-- Tampilkan tombol Menu untuk Admin atau Warung tanpa memeriksa status pengantaran -->
+                                    <a href="{{ route('warung.menu', $w->warung_id) }}" class="btn btn-warning">Menu</a>
+                                @endif
+                            @endauth
+
                             @auth
                                 @if (Auth::user()->hasRole('Admin') || (Auth::user()->hasRole('Warung') && Auth::id() === $w->user_id))
                                     <a href="{{ route('warung.edit', $w->warung_id) }}" class="btn btn-primary">Edit</a>
-                                    <form action="{{ route('warung.destroy', $w->warung_id) }}" method="POST" style="display: inline-block;" id="deleteForm-{{ $w->warung_id }}">
+                                    <form action="{{ route('warung.destroy', $w->warung_id) }}" method="POST"
+                                        style="display: inline-block;" id="deleteForm-{{ $w->warung_id }}">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="button" class="btn btn-danger" onclick="deleteWarung({{ $w->warung_id }})">Hapus</button>
+                                        <button type="button" class="btn btn-danger"
+                                            onclick="deleteWarung({{ $w->warung_id }})">Hapus</button>
                                     </form>
                                 @endif
                             @endauth
@@ -45,11 +58,12 @@
 
                 <!-- Modal untuk Gambar -->
                 <div class="modal fade" id="imageModal-{{ $w->warung_id }}" tabindex="-1"
-                     aria-labelledby="imageModalLabel-{{ $w->warung_id }}" aria-hidden="true">
+                    aria-labelledby="imageModalLabel-{{ $w->warung_id }}" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-lg">
                         <div class="modal-content">
                             <div class="modal-body p-0">
-                                <img src="{{ asset('img/' . $w->image) }}" class="img-fluid" style="width: 100%;" alt="{{ $w->nama_warung }}">
+                                <img src="{{ asset('img/' . $w->image) }}" class="img-fluid" style="width: 100%;"
+                                    alt="{{ $w->nama_warung }}">
                             </div>
                         </div>
                     </div>
