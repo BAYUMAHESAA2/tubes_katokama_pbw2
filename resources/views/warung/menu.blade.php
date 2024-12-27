@@ -10,6 +10,8 @@
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         .modal-body img {
             width: 100%;
@@ -43,6 +45,26 @@
             max-height: 1.5em;
             padding: 6px;
         }
+
+        #map {
+            width: 100%;
+            height: 200px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .leaflet-popup-content {
+            margin: 8px;
+            line-height: 1.4;
+        }
+
+        .leaflet-popup-content b {
+            color: #333;
+            display: block;
+            margin-bottom: 4px;
+        }
+
     </style>
 </head>
 
@@ -94,6 +116,9 @@
                             @endcan
                         @endauth
                     </div>
+                </div>
+                <div class="card-body">
+                    <div id="map"></div>
                 </div>
             </div>
 
@@ -359,6 +384,24 @@
             }
         }
     </script>
+      <script>
+            // Inisialisasi peta
+            var map = L.map('map').setView([{{ $warung->latitude }}, {{ $warung->longitude }}], 15);
+            
+            // Tambahkan layer peta
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+            
+            // Tambahkan marker untuk lokasi warung
+            var marker = L.marker([{{ $warung->latitude }}, {{ $warung->longitude }}])
+                .addTo(map)
+                .bindPopup("<b>{{ $warung->nama_warung }}</b><br>{{ $warung->alamat }}");
+            
+            // Buka popup marker secara otomatis
+            marker.openPopup();
+        </script>
+
 </body>
 
 </html>

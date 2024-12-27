@@ -26,28 +26,29 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
+    // Route warung
     Route::get('/warung', [WarungController::class, 'index'])->name('warung.index');
     Route::get('/warung/search', [WarungController::class, 'search'])->name('warung.search');
-});
-
-Route::middleware(['auth'])->group(function () {
-    Route::get('/warung', [WarungController::class, 'index'])->name('warung.index');
-    Route::get('/warung/search', [WarungController::class, 'search'])->name('warung.search');
+    Route::get('/warung/add', function () {
+        return view('warung.addwarung');
+    })->name('warung.add');
+    Route::post('/warung', [WarungController::class, 'store'])->name('warung.store');
     Route::delete('/warung/{warung}', [WarungController::class, 'destroy'])->name('warung.destroy');
     Route::put('warung/{id}', [WarungController::class, 'update'])->name('warung.update');
     Route::get('warung/{id}/edit', [WarungController::class, 'edit'])->name('warung.edit');
+    
+    // Route menu warung
+    Route::get('/warung/{id}/menu', [WarungController::class, 'showMenu'])->name('warung.menu');
+    Route::get('/warung/{id}/menu/add', [WarungController::class, 'addMenu'])->name('warung.menu.add');
+    Route::post('/warung/{id}/menu', [WarungController::class, 'storeMenu'])->name('warung.menu.store');
+    Route::get('warung/{warung_id}/menu', [MenuController::class, 'index'])->name('warung.menu.index');
+    Route::get('/warung/{warung}/menu/{menu}/edit', [MenuController::class, 'edit'])->name('menu.edit');
+    Route::put('/warung/{warung}/menu/{menu}', [MenuController::class, 'update'])->name('menu.update');
+    Route::delete('/warung/{warung}/menu/{menu}', [MenuController::class, 'destroy'])->name('menu.destroy');
 });
-
 
 require __DIR__ . '/auth.php';
 
-Route::get('/warung', [WarungController::class, 'index'])->name('warung.index');
-Route::get('/warung/add', function () {
-    return view('warung.addwarung');
-})->name('warung.add');
-
-Route::post('/warung', [WarungController::class, 'store'])->name('warung.store');
-Route::get('/warung/search', [WarungController::class, 'search'])->name('warung.search');
 
 // routes/web.php
 Route::get('/warung/{id}/menu', [WarungController::class, 'showMenu'])->name('warung.menu');

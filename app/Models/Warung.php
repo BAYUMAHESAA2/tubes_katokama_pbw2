@@ -20,6 +20,8 @@ class Warung extends Model
         'alamat',
         'no_wa',
         'status_pengantaran',
+        'latitude',
+        'longitude',
         'image',
         'user_id', // Tambahkan 'user_id' agar dapat diisi secara massal
     ];
