@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('no_wa', 15);
             $table->enum('status_pengantaran', ['aktif', 'tidak aktif'])->default('aktif');
             $table->string('image')->nullable();
+            $table->decimal('latitude', 10, 8)->nullable();
+            $table->decimal('longitude', 11, 8)->nullable();
 
             // Tambahkan kolom user_id dengan foreign key
             $table->unsignedBigInteger('user_id')->nullable();

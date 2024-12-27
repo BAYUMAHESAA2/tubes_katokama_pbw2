@@ -58,7 +58,7 @@
                         <li class="nav-item me-5 mb-2 mb-lg-0">
                             @auth
                                 @if (Auth::user()->hasRole('Admin'))
-                                    <a class="{{ request()->is('manage-account') ? 'nav-link text-warning active' : 'nav-link' }}"
+                                    <a class="{{ request()->is('manageAccount') ? 'nav-link text-warning active' : 'nav-link' }}"
                                        aria-current="page" href="{{ route('manageAccount.index') }}">Manage Account</a>
                                 @endif
                             @endauth

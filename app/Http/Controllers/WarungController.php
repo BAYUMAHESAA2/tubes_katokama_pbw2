@@ -56,6 +56,9 @@ class WarungController extends Controller
             'alamat' => 'nullable|string|max:255',
             'no_wa' => 'required|string|max:15',
             'image' => 'nullable|image',
+            'status_pengantaran' => 'required|in:aktif,tidak aktif',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
         ]);
 
         $warung = new Warung();
@@ -64,6 +67,8 @@ class WarungController extends Controller
         $warung->alamat = $request->input('alamat');
         $warung->no_wa = $request->input('no_wa');
         $warung->status_pengantaran = 'aktif';
+        $warung->latitude = $request->input('latitude');  
+        $warung->longitude = $request->input('longitude');
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
@@ -156,7 +161,9 @@ class WarungController extends Controller
             'alamat' => 'nullable|string|max:255',
             'no_wa' => 'required|string|max:15',
             'status_pengantaran' => 'required|in:aktif,tidak aktif',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // Validasi untuk gambar
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'latitude' => 'required|numeric',  
+            'longitude' => 'required|numeric', 
         ]);
 
         $warung = Warung::findOrFail($id);
@@ -164,6 +171,8 @@ class WarungController extends Controller
         $warung->alamat = $request->alamat;
         $warung->no_wa = $request->no_wa;
         $warung->status_pengantaran = $request->status_pengantaran;
+        $warung->latitude = $request->latitude;   
+        $warung->longitude = $request->longitude;
 
         // Cek apakah gambar diunggah
         if ($request->hasFile('image')) {
@@ -182,5 +191,30 @@ class WarungController extends Controller
         $warung->save();
 
         return redirect()->route('warung.index')->with('success', 'Warung berhasil diperbarui!');
+    }
+
+    public function getLocation($id)
+    {
+        $warung = Warung::findOrFail($id);
+        return response()->json([
+            'latitude' => $warung->latitude,
+            'longitude' => $warung->longitude
+        ]);
+    }
+
+    // Tambah method untuk update lokasi
+    public function updateLocation(Request $request, $id)
+    {
+        $request->validate([
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+        ]);
+
+        $warung = Warung::findOrFail($id);
+        $warung->latitude = $request->latitude;
+        $warung->longitude = $request->longitude;
+        $warung->save();
+
+        return response()->json(['message' => 'Lokasi berhasil diperbarui']);
     }
 }
