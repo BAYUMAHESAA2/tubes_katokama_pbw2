@@ -28,6 +28,7 @@
                 padding-top: 150px; /* Sesuaikan tinggi ini dengan navbar Anda */
             }
         </style>
+       
     </head>
     <body class="d-flex flex-column min-vh-100">
         <div class="flex-grow-1">
@@ -50,5 +51,6 @@
         @unless(request()->is('dashboard')) {{-- Ganti 'dashboard' dengan route yang sesuai --}}
             @include('layouts.footer')
         @endunless
+        
     </body>
 </html>

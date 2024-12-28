@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <link rel="stylesheet" href="//cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css"/>
     <style>
         .modal-body img {
             width: 100%;
@@ -131,7 +133,7 @@
                     @endcan
                 @endauth
 
-                <table class="table table-striped table-hover">
+                <table class="table table-striped table-hover" id="myTable">
                     <thead>
                         <tr>
                             @auth
@@ -274,7 +276,7 @@
         </div>
     </div>
     </div>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
@@ -401,7 +403,14 @@
             // Buka popup marker secara otomatis
             marker.openPopup();
         </script>
-
+        <script src="//cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
+        <script>$('#myTable').DataTable({
+            pageLength: 5, // Default number of rows to show
+            lengthMenu: [5, 10, 12], // Options for rows per page
+            language: {
+                lengthMenu: "Show _MENU_ entries per page"
+            }
+        });</script>
 </body>
 
 </html>
