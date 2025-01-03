@@ -1,5 +1,9 @@
 <x-app-layout>
-    <div class="container mt-5">
+    <x-slot name="header">  
+            {{ __('Manage Role') }}
+    </x-slot>
+
+    <div class="container mb-3" style="margin-top: 120px">
 
         <div class="table-responsive">
             <table class="table table-bordered">

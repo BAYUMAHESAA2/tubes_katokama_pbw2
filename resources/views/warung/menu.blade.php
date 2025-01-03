@@ -68,15 +68,29 @@
         }
 
     </style>
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
 <body>
-    <nav class="navbar bg-body-tertiary">
-        <div class="container-fluid">
-            <a href="{{ route('warung.index') }}" class="btn btn-secondary mb-3">Kembali</a>
-        </div>
-    </nav>
-    <div class="container my-4">
+    <div>
+        <!-- Tombol Close -->
+        <a 
+            type="button" 
+            class="btn-close" 
+            style="filter: invert(100%) sepia(100%); position: fixed; top: 24px; left: 16px; z-index: 1050;" 
+            aria-label="Close" 
+            href="{{ route('warung.index') }}">
+        </a>
+
+        <!-- Header -->
+        <h2 
+            class="mb-2 text-center text-light bg-merahtua fs-1 p-4 fixed-top" 
+            style="box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 1040;">
+            Warung {{ $warung->nama_warung }}
+        </h2>
+    </div>  
+
+    <div class="container" style="margin-top:130px">
         @if (session('success'))
             <script>
                 Swal.fire({
@@ -88,8 +102,6 @@
                 });
             </script>
         @endif
-
-        <h2 class="mb-4">Menu di Warung {{ $warung->nama_warung }}</h2>
 
         <div class="row">
             <!-- Sidebar Kiri -->

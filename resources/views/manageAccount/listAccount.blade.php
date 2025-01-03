@@ -1,7 +1,11 @@
 <x-app-layout>
+    <x-slot name="header">  
+            {{ __('Manage Account') }}
+    </x-slot>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <div class="container mt-5">
+    <div class="container mb-3" style="margin-top: 120px">
         <div class="mb-4">
             <a href="{{ route('manageAccount.createAccount') }}" class="btn btn-primary">
                 Create User

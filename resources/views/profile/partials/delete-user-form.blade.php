@@ -1,4 +1,4 @@
-<section class="space-y-6">
+<section class="space-y-6 my-4">
     <header>
         <h2 class="text-lg font-medium">Hapus Akun</h2>
         <p class="mt-1 text-sm text-gray-600">Setelah akun Anda dihapus, semua data akan terhapus secara permanen.</p>

@@ -22,6 +22,7 @@
                 background-color: #f8f9fa;
                 border-radius: 8px;
                 box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                margin-bottom: 20px;
             }
 
             #map {
@@ -33,8 +34,10 @@
     </head>
 
     <body>
-        <div class="form-container">
-            <h2>Edit Warung</h2>
+        <div class="form-container" style="margin-top: 120px">
+            <x-slot name="header">  
+                {{ __('Edit Warung') }}
+            </x-slot>
             <form action="{{ route('warung.update', $warung->warung_id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
@@ -85,7 +88,10 @@
                 </div>
 
                 <!-- Submit Button -->
-                <button type="submit" class="btn btn-primary" style="margin-bottom: 20px;">Update</button>
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                    <a  href="{{ route('warung.index') }}" class="btn btn-secondary">Batal</a>
+                </div>
             </form>
         </div>
 

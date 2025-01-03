@@ -1,10 +1,14 @@
 <x-app-layout>
-    <div class="container mt-5">
+    <x-slot name="header">  
+            {{ __('Edit Role') }}
+    </x-slot>
+
+    <div class="container border mb-5 rounded-4 shadow-sm" style="margin-top: 120px">
         <form action="{{ route('roles.update', $role->id) }}" method="POST">
             @csrf
             @method('PUT')
             
-            <div class="mb-3">
+            <div class="my-3">
                 <label class="form-label">Role Name</label>
                 <input type="text" class="form-control" name="name" value="{{ $role->name }}" readonly>
             </div>
@@ -27,8 +31,10 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary">Update Role</button>
-            <a href="{{ route('roles.index') }}" class="btn btn-secondary">Back</a>
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">Update Role</button>
+                <a href="{{ route('manageRole.list') }}" class="btn btn-secondary">Cancel</a>
+            </div>
         </form>
     </div>
 </x-app-layout>
