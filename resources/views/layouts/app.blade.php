@@ -25,8 +25,9 @@
 
         <style>
             body {
-                padding-top: 150px; /* Sesuaikan tinggi ini dengan navbar Anda */
+                padding-top: 150px; /* Sesuaikan dengan tinggi header */
             }
+
         </style>
        
     </head>
@@ -36,7 +37,7 @@
 
             <!-- Page Heading -->
             @isset($header)
-                <header class="bg-light border-bottom">
+                <header class="display-4 text-center fixed-top bg-light border-bottom" style="margin-top: 130px; z-index:100">
                     <div class="p-4 container">
                         {{ $header }}
                     </div>

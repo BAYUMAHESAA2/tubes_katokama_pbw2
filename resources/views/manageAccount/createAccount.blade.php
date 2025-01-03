@@ -1,10 +1,12 @@
 <x-app-layout>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
+    <div class="container mb-5">
+        <x-slot name="header">  
+            {{ __('Create Account') }}
+        </x-slot>
+
+        <div class="row justify-content-center" style="margin-top: 120px">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">Create New User</div>
-
                     <div class="card-body">
                         <form method="POST" action="{{ route('manageAccount.store') }}" enctype="multipart/form-data">
                             @csrf

@@ -22,6 +22,7 @@
                 background-color: #f8f9fa; /* Warna latar belakang untuk form */
                 border-radius: 8px;
                 box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                margin-bottom: 20px;
             }
 
             #map {
@@ -35,7 +36,12 @@
     </head>
 
     <body>
-        <div class="form-container">
+        <div class="form-container" style="margin-top: 120px">
+
+            <x-slot name="header">  
+                {{ __('Tambah Warung') }}
+            </x-slot>
+
             <form action="{{ route('warung.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <!-- Nama Warung -->
@@ -82,8 +88,10 @@
                     <input type="hidden" id="longitude" name="longitude" value="{{ old('longitude', $warung->longitude ?? '') }}">
                 </div>
 
-                <!-- Submit Button -->
-                <button type="submit" class="btn btn-primary" style="margin-bottom: 20px;">Submit</button>
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Kirim</button>
+                    <a  href="{{ route('warung.index') }}" class="btn btn-secondary">Batal</a>
+                </div>
             </form>
         </div>
  

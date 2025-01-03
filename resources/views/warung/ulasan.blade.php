@@ -7,6 +7,8 @@
     <title>Penilaian dan Ulasan</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <style>
         .star-rating {
             direction: rtl;
@@ -34,12 +36,17 @@
     </style>
 </head>
 <body class="bg-light">
-    <div class="container py-5">
+    <div class="position-relative">
+        <div class="ms-3 mt-4">
+            <a type="button" class="btn-close" aria-label="Close" href="{{ route('warung.menu', $warung->warung_id) }}"></a>
+        </div>
+    </div>
+    <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card shadow">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0">Form Penilaian dan Ulasan</h4>
+                    <div class="card-header bg-merahtua text-white">
+                        <h4 class="m-3 text-center">Form Penilaian dan Ulasan</h4>
                     </div>
                     <div class="card-body">
                         <form action="{{ route('ulasan.store', $warung->warung_id) }}" method="POST">
@@ -66,12 +73,9 @@
                             </div>
                         
                             <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary">Kirim Ulasan</button>
-                                <a href="{{ route('warung.menu', $warung->warung_id) }}" class="btn btn-secondary mt-3">Kembali ke Menu</a>
+                                <button type="submit" class="btn btn-merahtua">Kirim Ulasan</button>
                             </div>
-                        </form>
-                        
-                        
+                        </form>    
                     </div>
                 </div>
             </div>

@@ -7,9 +7,13 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-
-    <div class="container mt-5">
-        <h2 class="mb-4">Tambah Menu untuk {{ $warung->nama_warung }}</h2>
+    <div class="position-relative">
+        <div class="position-absolute ms-3" style="margin-top: -24px">
+            <a type="button" class="btn-close" aria-label="Close" href="{{ route('warung.menu', $warung->warung_id) }}"></a>
+        </div>
+    </div>
+    <div class="container mt-5 border rounded-4 shadow-sm">
+        <h2 class="m-3 text-center">Tambah Menu untuk {{ $warung->nama_warung }}</h2>
         
         <!-- Form untuk menambahkan menu baru -->
         <form action="{{ route('menu.store', $warung->warung_id) }}" method="POST">
@@ -35,12 +39,8 @@
                 </select>
             </div>
 
-            <button type="submit" class="btn btn-primary">Tambah Menu</button>
+            <button type="submit" class="btn btn-primary mb-4">Tambah Menu</button>
         </form>
-
-        <!-- Back button -->
-        <a href="{{ route('warung.menu', $warung->warung_id) }}" class="btn btn-secondary mt-3">Kembali ke Menu</a>
-
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

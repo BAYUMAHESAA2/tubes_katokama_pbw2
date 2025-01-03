@@ -40,7 +40,7 @@
             <div class="offcanvas-body">
                 <!-- Navigation Links -->
                 @auth
-                    <ul class="navbar-nav me-auto ms-0 ms-lg-5 fs-4">
+                    <ul class="navbar-nav me-auto ms-0 ms-lg-5 fs-5">
                         <li class="nav-item me-5">
                             <a class="{{ request()->is('dashboard') ? 'nav-link text-warning active' : 'nav-link' }}"
                                 aria-current="page" href="{{ route('dashboard') }}">Beranda</a>
@@ -55,7 +55,9 @@
 
                         <hr class="my-2 text-light opacity-50">
 
-                        <li class="nav-item me-5 mb-2 mb-lg-0">
+                        @auth
+                        @if (Auth::user()->hasRole('Admin'))
+                        <li class="nav-item me-5">
                             @auth
                                 @if (Auth::user()->hasRole('Admin'))
                                     <a class="{{ request()->is('manageAccount') ? 'nav-link text-warning active' : 'nav-link' }}"
@@ -63,6 +65,12 @@
                                 @endif
                             @endauth
                         </li>
+
+                        <hr class="my-2 text-light opacity-50">
+
+                        @endif
+                        @endauth
+                        
                         <li class="nav-item me-5 mb-2 mb-lg-0">
                             @auth
                                 @if (Auth::user()->hasRole('Admin'))
@@ -71,7 +79,6 @@
                                 @endif
                             @endauth
                         </li>
-                        
                     </ul>
                 @endauth
 

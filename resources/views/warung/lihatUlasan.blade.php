@@ -11,10 +11,18 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
     <!-- SweetAlert2 CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+
 </head>
 <body>
+<div class="position-relative">
+    <div class="ms-3 mt-4">
+        <a type="button" class="btn-close" aria-label="Close" href="{{ route('warung.menu', $warung->warung_id) }}"></a>
+    </div>
+</div>
 
-<div class="container mt-5">
+<div class="container mt-3">
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
@@ -30,8 +38,8 @@
     @endif
 
     <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-            <h2 class="card-title">Ulasan untuk {{ $warung->nama_warung }}</h2>
+        <div class="card-header bg-merahtua text-white">
+            <h2 class="card-title text-center">Ulasan untuk {{ $warung->nama_warung }}</h2>
         </div>
         <div class="card-body">
             @if ($warung->ulasan->isEmpty())
@@ -48,6 +56,8 @@
                                 <th>Komentar</th>
                                 <th>Tanggal</th>
                                 @if(Auth::check() && (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('User')))
+                                    <th>Hapus</th>
+                                @else
                                     <th>Hapus</th>
                                 @endif
                             </tr>
@@ -84,11 +94,6 @@
                     </table>
                 </div>
             @endif
-        </div>
-        <div class="card-footer text-end">
-            <a href="{{ route('warung.menu', $warung->warung_id) }}" class="btn btn-secondary">
-                Kembali ke Menu
-            </a>
         </div>
     </div>
 </div>

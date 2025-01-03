@@ -19,7 +19,7 @@ class RoleSeeder extends Seeder
         // Membuat akun admin
         $admin = User::create([
             'id' => 1,
-            'name' => 'auuu',
+            'name' => 'Bagas Aldianata',
             'email' => 'admin@gmail.com',
             'email_verified_at' => null,
             'password' => Hash::make('12345678'),

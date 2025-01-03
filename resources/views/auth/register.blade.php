@@ -28,7 +28,7 @@
             <div class="mt-2">
                 <x-input-label for="role" :value="__('Register As')" />
                 <select id="role" name="role" class="form-select mt-1" aria-label="Default select example" required>
-                    <option selected>Pilih role anda</option>
+                    <option value="">Pilih role anda</option>
                     <option value="User">Pembeli</option>
                     <option value="Warung">Warung</option>
                 </select>
